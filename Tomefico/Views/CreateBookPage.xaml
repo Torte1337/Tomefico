@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Tomefico.Views.CreateBookPage"
+             BackgroundColor="#FDE0CD"
+             xmlns:pm="clr-namespace:Tomefico.ViewModels"
+             xmlns:enums="clr-namespace:Tomefico.Enums"
+             xmlns:models="clr-namespace:Tomefico.Models">
+
+            <ScrollView>
+                <VerticalStackLayout Spacing="16" Margin="10">
+
+                    <Label Text="Neues Buch erstellen" FontSize="24" FontAttributes="Bold" FontFamily=""/>
+
+                    <!-- Titel -->
+                    <Border Stroke="Gray" StrokeThickness="1" BackgroundColor="WhiteSmoke" StrokeShape="RoundRectangle 12" Padding="8">
+                        <Entry Placeholder="Buchtitel..." Text="{Binding BookTitle}"/>
+                    </Border>
+
+                    <!-- Beschreibung -->
+                    <Border Stroke="Gray" StrokeThickness="1" BackgroundColor="WhiteSmoke" StrokeShape="RoundRectangle 12" Padding="8">
+                        <Entry Placeholder="Buchbeschreibung..." Text="{Binding BookDescription}"/>
+                    </Border>
+
+                    <!-- Author -->
+                    <Border Stroke="Gray" StrokeThickness="1" BackgroundColor="WhiteSmoke" StrokeShape="RoundRectangle 12" Padding="8">
+                        <Entry Placeholder="Author..." Text="{Binding BookAuthor}"/>
+                    </Border>
+
+                    <!-- Status -->
+                    <Label Text="Status" />
+                    <Border Stroke="Gray" StrokeThickness="1" BackgroundColor="WhiteSmoke" StrokeShape="RoundRectangle 12" Padding="8">
+                        <Picker BackgroundColor="WhiteSmoke"
+                            ItemsSource="{Binding StatusDisplayList}"
+                            ItemDisplayBinding="{Binding DisplayName}"
+                            SelectedItem="{Binding BookStatus}" />
+                    </Border>
+
+                   <!-- Cover auswählen -->
+                    <Button Text="Cover auswählen" Command="{Binding PickCoverImageCommand}" BackgroundColor="Gray"/>
+                    <Image HeightRequest="150"
+                        Margin="0,8,0,0"
+                        Aspect="AspectFill"
+                        Source="{Binding BookCover, Converter={StaticResource ByteArrayToImageSourceConverter}}" />
+
+                    <!-- Speicherbutton -->
+                    <Button Text="Speichern"
+                            BackgroundColor="#DA5B38"
+                            TextColor="White"
+                            FontAttributes="Bold"
+                            CornerRadius="12"
+                            HeightRequest="50"
+                            Command="{Binding CreateBookCommand}" /> 
+
+                    <!-- Cancelbutton -->
+                    <Button Text="Abbrechen"
+                            BackgroundColor="Gray"
+                            TextColor="White"
+                            FontAttributes="Bold"
+                            CornerRadius="12"
+                            HeightRequest="50"
+                            Command="{Binding CancelCommand}" /> 
+                </VerticalStackLayout>
+            </ScrollView>
+</ContentPage>

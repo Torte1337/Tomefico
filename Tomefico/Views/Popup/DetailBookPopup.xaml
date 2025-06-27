@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<toolkit:Popup 
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+    x:Class="Tomefico.Views.Popup.DetailBookPopup"
+    xmlns:models="clr-namespace:Tomefico.Models"
+    xmlns:vm="clr-namespace:Tomefico.ViewModels"
+    CanBeDismissedByTappingOutsideOfPopup="True"
+    Color="Transparent">
+
+
+    <Grid VerticalOptions="Center" HorizontalOptions="Center" Padding="0">
+        <Border
+            StrokeThickness="0"
+            StrokeShape="RoundRectangle 20"
+            BackgroundColor="White"
+            Padding="20"
+            WidthRequest="320"
+            MaximumHeightRequest="650"
+            Shadow="5">
+            <Grid RowDefinitions="Auto,Auto,*">
+                <Button Grid.Row="0" BackgroundColor="Transparent" Text="X" FontAttributes="Bold" FontSize="16" TextColor="Black" HorizontalOptions="End" Command="{Binding ClosePopupCommand}"/>
+                <Border StrokeShape="RoundRectangle 15,15,0,0" Grid.Row="1">
+                    <Image Aspect="AspectFill" BackgroundColor="#FFBABABA" WidthRequest="300" HeightRequest="300"/>
+                </Border>
+
+                <Border Grid.Row="2" TranslationY="-20" StrokeShape="RoundRectangle 20,20,0,0" BackgroundColor="Gray">
+                    <VerticalStackLayout Spacing="5" Margin="10,10,0,0" x:DataType="vm:DetailBookViewModel">
+
+                        <HorizontalStackLayout HorizontalOptions="Start" Padding="10,0,0,0" Spacing="10">
+                            <Label Text="{Binding SelectedBook.Title}" FontAttributes="Bold"/>
+                        </HorizontalStackLayout>
+
+                        <HorizontalStackLayout HorizontalOptions="Start" Padding="10,0,0,0" Spacing="10">
+                            <Label Text="{Binding SelectedBook.Description}" FontAttributes="Bold"/>
+                        </HorizontalStackLayout>
+
+                        <HorizontalStackLayout HorizontalOptions="Start" Padding="10,0,0,0" Spacing="10">
+                            <Label Text="{Binding SelectedBook.Status}" FontAttributes="Bold"/>
+                        </HorizontalStackLayout>
+
+                        <!-- <HorizontalStackLayout HorizontalOptions="Start" Padding="10,0,0,0" Spacing="10">
+                            <Label Text="{Binding SelectedBook.Author.Firstname}" FontAttributes="Bold"/>
+                            <Label Text="{Binding SelectedBook.Author.Surname}" FontAttributes="Bold"/>
+                        </HorizontalStackLayout> -->
+
+                    </VerticalStackLayout>
+                </Border>
+            </Grid>
+        </Border>
+    </Grid>
+</toolkit:Popup>

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Tomefico.Views.LibraryPage"
+             BackgroundColor="#FDE0CD"
+             xmlns:pm="Tomefico.ViewModels"
+             xmlns:models="clr-namespace:Tomefico.Models">
+    <VerticalStackLayout Padding="10" Margin="10">
+        <Button Text="Buch hinzufügen" Margin="10" BackgroundColor="#DA5B38" HorizontalOptions="Center" Command="{Binding GoToCreateBookCommand}"/>
+        <!-- <SearchBar Placeholder="Buch / Author suchen..." /> -->
+
+        <CollectionView ItemsSource="{Binding BookList}" HorizontalOptions="Center">
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <SwipeView>
+
+                        <SwipeView.RightItems>
+                            <SwipeItems Mode="Reveal">
+                                <SwipeItem Text="Bearbeiten"
+                                           BackgroundColor="DarkOrange"
+                                           CommandParameter="{Binding .}"
+                                           Command="{Binding BindingContext.OnEditCommand, Source={RelativeSource AncestorType={x:Type ContentPage}}}" />
+                                <SwipeItem Text="Löschen"
+                                           BackgroundColor="DarkRed"
+                                           CommandParameter="{Binding .}"
+                                           Command="{Binding BindingContext.OnDeleteCommand, Source={RelativeSource AncestorType={x:Type ContentPage}}}" />
+                            </SwipeItems>
+                        </SwipeView.RightItems>
+
+                        <Grid>
+                            <Border StrokeShape="RoundRectangle 5" Margin="2" HeightRequest="40" Stroke="Gray" StrokeThickness="1" BackgroundColor="White">
+                                <HorizontalStackLayout Spacing="5" HorizontalOptions="Center">
+                                    <HorizontalStackLayout.GestureRecognizers>
+                                        <TapGestureRecognizer Command="{Binding BindingContext.OpenBookDetailsCommand, Source={RelativeSource AncestorType={x:Type ContentPage}}}" 
+                                            CommandParameter="{Binding .}"/>
+                                    </HorizontalStackLayout.GestureRecognizers>
+                                        <Label Text="{Binding Title}" FontAttributes="Bold" FontSize="18" HorizontalOptions="Center" VerticalOptions="Center"/>
+                                        <Label Text="{Binding Author}" FontSize="14" TextColor="Gray" VerticalOptions="Center" HorizontalOptions="Center"/>
+                                </HorizontalStackLayout>
+                            </Border>
+                        </Grid>
+
+                    </SwipeView>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+
+
+    </VerticalStackLayout>
+</ContentPage>

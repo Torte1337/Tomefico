@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<toolkit:Popup 
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+    x:Class="Tomefico.Views.Popup.BookListPopup"
+    CanBeDismissedByTappingOutsideOfPopup="True"
+    xmlns:vm="clr-namespace:Tomefico.ViewModels"
+    Color="Transparent"> 
+
+
+    <Grid VerticalOptions="Center" HorizontalOptions="Center" Padding="0">
+        <Border
+            StrokeThickness="0"
+            StrokeShape="RoundRectangle 20"
+            BackgroundColor="White"
+            Padding="20"
+            WidthRequest="320"
+            MaximumHeightRequest="650"
+            Shadow="5">
+            <VerticalStackLayout Spacing="5">
+                <Button BackgroundColor="Transparent" Text="X" FontAttributes="Bold" FontSize="16" TextColor="Black" HorizontalOptions="End" BorderColor="Gray" BorderWidth="1" Command="{Binding ClosePopupCommand}"/>
+                <ScrollView>
+                    <CollectionView ItemsSource="{Binding PopupBookList}" HorizontalOptions="Center" VerticalOptions="Center">
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate>
+                                <Border StrokeShape="RoundRectangle 15" Margin="2" HeightRequest="40" Padding="10" BackgroundColor="#4B919191" Stroke="#66000000">
+                                    <Label Text="{Binding Title}" HorizontalTextAlignment="Start" VerticalTextAlignment="Center"/>
+                                </Border>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+                </ScrollView>
+            </VerticalStackLayout>
+
+            
+        </Border>
+    </Grid>
+</toolkit:Popup>
