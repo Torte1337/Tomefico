@@ -43,6 +43,7 @@ public static class MauiProgram
 		builder.Services.AddTransient<CreateEditBookPopup>();
 		builder.Services.AddTransient<DetailBookPopup>();
 		builder.Services.AddTransient<BookListPopup>();
+		builder.Services.AddTransient<AuthorListPopup>();
 
 #if DEBUG
 		builder.Logging.AddDebug();

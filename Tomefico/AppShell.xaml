@@ -12,16 +12,19 @@
 
     <TabBar>
         <ShellContent
-            Title="Dashboard"
+            Icon="icon_dashboard.png"
+            Title="Start"
             ContentTemplate="{DataTemplate views:DashboardPage}"
             Route="DashboardPage" />
         <ShellContent
             Title="Bibliothek"
+            Icon="icon_library.png"
             ContentTemplate="{DataTemplate views:LibraryPage}"
             Route="LibraryPage" />
         <ShellContent
             Title="Einstellungen"
-            ContentTemplate="{DataTemplate views:DashboardPage}"
+            Icon="icon_settings.png"
+            ContentTemplate="{DataTemplate views:SettingsPage}"
             Route="SettingsPage" />
     </TabBar>    
 

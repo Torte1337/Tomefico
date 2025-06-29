@@ -2,14 +2,17 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Tomefico.Views.DashboardPage"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              BackgroundColor="#FDE0CD"
              xmlns:pm="clr-namespace:Tomefico.ViewModels"
-             xmlns:models="clr-namespace:Tomefico.Models"
-             >
+             xmlns:models="clr-namespace:Tomefico.Models">
 
+    <ContentPage.Behaviors>
+        <toolkit:StatusBarBehavior StatusBarColor="#FDE0CD" StatusBarStyle="LightContent"/>
+    </ContentPage.Behaviors>
 
     <ScrollView>
-        <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto"  RowSpacing="24" Margin="0,40,0,0">
+        <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto"  RowSpacing="24" Margin="0,40,0,0" VerticalOptions="Center">
             <Label Text="Hallo, Willkommen zurück!" FontAttributes="Bold" FontSize="20" Grid.Row="0" HorizontalOptions="Center" HorizontalTextAlignment="Center"/>
             <!-- Bücher Buttons -->
             <HorizontalStackLayout Grid.Row="1" HorizontalOptions="Center" Spacing="15">
@@ -62,46 +65,32 @@
                         </Border.GestureRecognizers>
                 </Border>
             </HorizontalStackLayout>
-            
-            <Label Text="Alle Authoren" FontAttributes="Bold" FontSize="20" Grid.Row="3" HorizontalOptions="Center" HorizontalTextAlignment="Center"/>
-            <!-- Authoren -->
-            <CollectionView Grid.Row="4"  ItemsLayout="HorizontalList" FlowDirection="LeftToRight" ItemsSource="{Binding AuthorList}" Margin="10">
-                <CollectionView.ItemTemplate>
-                    <DataTemplate x:DataType="models:AuthorModel">
-                        <Border StrokeShape="RoundRectangle 75" BackgroundColor="#FFE5E5FF" WidthRequest="120" HeightRequest="120" Margin="10" Shadow="4 4 5 Gray 0.2">
-                            <VerticalStackLayout HorizontalOptions="Center" VerticalOptions="Center">
-                                <Image BackgroundColor="#FFD3D3FF" VerticalOptions="Center" HorizontalOptions="Center"/>
-                                <Label Text="{Binding Firstname}" FontAttributes="Bold" FontFamily="" HorizontalTextAlignment="Center" VerticalTextAlignment="Center"/>
-                                <Label Text="{Binding Surname}" FontAttributes="Bold" FontFamily="" HorizontalTextAlignment="Center" VerticalTextAlignment="Center"/>
-                            </VerticalStackLayout>
-                        </Border>
-                    </DataTemplate>
-                </CollectionView.ItemTemplate>
-            </CollectionView>
+            <HorizontalStackLayout Grid.Row="3" HorizontalOptions="Center" Spacing="15">
+                <Border StrokeShape="RoundRectangle 15"
+                        Stroke="#FFFFFF66" BackgroundColor="#FFFFFF99"
+                        WidthRequest="150" HeightRequest="150" Shadow="Gray 8 8">
+                        <VerticalStackLayout HorizontalOptions="Center" VerticalOptions="Center">
+                            <Label Text="❤️" FontSize="30" HorizontalTextAlignment="Center"/>
+                            <Label Text="Favoriten" HorizontalTextAlignment="Center"/>
+                        </VerticalStackLayout>
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding OpenToReadListCommand}"/>
+                        </Border.GestureRecognizers>
+                </Border>
 
-            <Label Text="Favoriten" FontAttributes="Bold" FontSize="20" Grid.Row="5" HorizontalOptions="Center" HorizontalTextAlignment="Center"/>
-            <!-- Favoriten -->
-            <VerticalStackLayout VerticalOptions="Center" HorizontalOptions="Center" Grid.Row="6">
-                    <CollectionView ItemsSource="{Binding FavoriteList}" FlowDirection="LeftToRight" ItemsLayout="HorizontalList" VerticalOptions="Center">
-                        <CollectionView.ItemTemplate>
-                            <DataTemplate x:DataType="models:BookModel">
-                                <Border StrokeShape="RoundRectangle 15" WidthRequest="120" HeightRequest="180" Padding="10" Margin="10" BackgroundColor="#FFD6FFFA">
-                                    <Border.GestureRecognizers>
-                                        <TapGestureRecognizer Command="{Binding BindingContext.OpenDetailPopupCommand, Source={RelativeSource AncestorType={x:Type ContentPage}}}"  CommandParameter="{Binding .}"/>
-                                    </Border.GestureRecognizers>
-                                    <VerticalStackLayout>
-                                        <Image BackgroundColor="Black" WidthRequest="100" HeightRequest="120"/>
-                                        <Label Text="{Binding Title}" HorizontalTextAlignment="Center"/>
+                <Border StrokeShape="RoundRectangle 15"
+                        Stroke="#FFFFFF66" BackgroundColor="#FFFFFF99"
+                        WidthRequest="150" HeightRequest="150" Shadow="Gray 8 8">
+                        <VerticalStackLayout HorizontalOptions="Center" VerticalOptions="Center">
+                            <Label Text="✒️" FontSize="30" HorizontalTextAlignment="Center"/>
+                            <Label Text="Authoren" HorizontalTextAlignment="Center"/>
+                        </VerticalStackLayout>
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding OpenAuthorListCommand}"/>
+                        </Border.GestureRecognizers>
+                </Border>
+            </HorizontalStackLayout>
 
-                                        <AbsoluteLayout>
-                                            <Label Text="♥️" AbsoluteLayout.LayoutBounds="1,0,20,20" AbsoluteLayout.LayoutFlags="PositionProportional" HorizontalOptions="End" VerticalOptions="Start" Scale="0.8"/>
-                                        </AbsoluteLayout>
-                                    </VerticalStackLayout>
-                                </Border>
-                            </DataTemplate>
-                        </CollectionView.ItemTemplate>
-                    </CollectionView>
-                </VerticalStackLayout>
         </Grid>
     </ScrollView>    
 </ContentPage>

@@ -18,6 +18,7 @@ public partial class DashboardViewModel : ObservableObject
     [ObservableProperty] ObservableCollection<BookModel> favoriteList = new();
     [ObservableProperty] ObservableCollection<AuthorModel> authorList = new();
     [ObservableProperty] ObservableCollection<BookModel> popupBookList = new();
+    
     public Func<Task>? RequestClose { get; set; }
     public DashboardViewModel(IServiceProvider serviceProvider)
     {
@@ -63,20 +64,38 @@ public partial class DashboardViewModel : ObservableObject
     [RelayCommand]
     public async Task OpenWishlist()
     {
+        if (WishList == null || WishList.Count == 0)
+        {
+            await Shell.Current.DisplayAlert("Information", "Derzeitig gibt es keine Bücher in der Wunschliste", "Ok");
+            return;
+        }
+
         OnClearPopuplist();
-        PopupBookList = WishList;
+        PopupBookList = new ObservableCollection<BookModel>(WishList);
         await OpenPopup();
     }
     [RelayCommand]
     public async Task OpenToReadList()
     {
+        if (TodoreadingList == null || TodoreadingList.Count == 0)
+        {
+            await Shell.Current.DisplayAlert("Information", "Derzeit gibt es keine Bücher in der Liste 'Noch zu lesen'", "Ok");
+            return;
+        }
+
         OnClearPopuplist();
-        PopupBookList = TodoreadingList;
+        PopupBookList = new ObservableCollection<BookModel>(TodoreadingList);
         await OpenPopup();
     }
     [RelayCommand]
     public async Task OpenReadingList()
     {
+        if (ReadingList == null || ReadingList.Count == 0)
+        {
+            await Shell.Current.DisplayAlert("Information", "Derzeit gibt es keine Bücher, die gerade gelesen werden", "Ok");
+            return;
+        }
+
         OnClearPopuplist();
         PopupBookList = new ObservableCollection<BookModel>(ReadingList);
         await OpenPopup();
@@ -84,10 +103,42 @@ public partial class DashboardViewModel : ObservableObject
     [RelayCommand]
     public async Task OpenFinishedList()
     {
+        if (FinishedReadingList == null || FinishedReadingList.Count == 0)
+        {
+            await Shell.Current.DisplayAlert("Information", "Derzeit gibt es keine fertig gelesenen Bücher", "Ok");
+            return;
+        }
+
         OnClearPopuplist();
-        PopupBookList = FinishedReadingList;
+        PopupBookList = new ObservableCollection<BookModel>(FinishedReadingList);
         await OpenPopup();
     }
+    [RelayCommand]
+    public async Task OpenFavoriteList()
+    {
+        if (FavoriteList == null || FavoriteList.Count == 0)
+        {
+            await Shell.Current.DisplayAlert("Information", "Derzeit gibt es keine Favoriten", "Ok");
+            return;
+        }
+
+        OnClearPopuplist();
+        PopupBookList = new ObservableCollection<BookModel>(FavoriteList);
+        await OpenPopup();
+    }
+    [RelayCommand]
+    public async Task OpenAuthorList()
+    {
+        if (AuthorList == null || AuthorList.Count == 0)
+        {
+            await Shell.Current.DisplayAlert("Information", "Derzeitig gibt es keine Authoren", "Ok");
+            return;
+        }
+
+        var authorPopup = serviceProvider.GetRequiredService<AuthorListPopup>();
+        await Shell.Current.CurrentPage.ShowPopupAsync(authorPopup);
+    }
+
     private void OnClearPopuplist()
     {
         if (PopupBookList != null && PopupBookList.Count > 0)
@@ -104,12 +155,4 @@ public partial class DashboardViewModel : ObservableObject
         if (RequestClose is not null)
             await RequestClose.Invoke();
     }
-    [RelayCommand]
-    public async Task OnOpenDetailPopup(BookModel selectedBook)
-    {
-        var detailPopup = new DetailBookPopup(selectedBook);
-        await Shell.Current.CurrentPage.ShowPopupAsync(detailPopup);
-    }
-
-
 }

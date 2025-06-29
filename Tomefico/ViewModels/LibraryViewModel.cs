@@ -16,62 +16,42 @@ public partial class LibraryViewModel : ObservableObject
     private readonly DataService dataService;
     private readonly IServiceProvider serviceProvider;
     [ObservableProperty] private ObservableCollection<BookModel> bookList = new ObservableCollection<BookModel>();
+    [ObservableProperty] private ObservableCollection<BookModel> filteredBookList = new ObservableCollection<BookModel>();
+    [ObservableProperty] private ObservableCollection<AuthorModel> authorList = new ObservableCollection<AuthorModel>();
+    [ObservableProperty] private AuthorModel selectedAuthor = null;
 
     public LibraryViewModel(DataService dataService, IServiceProvider serviceProvider)
     {
         this.dataService = dataService;
         this.serviceProvider = serviceProvider;
-        WeakReferenceMessenger.Default.Register<MessageRefreshBookList>(this, async (r, m) => { await OnLoadBookList(); });
+
     }
-    public async Task OnLoadBookList()
+
+    public async Task OnLoadLists()
     {
         try
         {
-            if (BookList != null && BookList.Count > 0)
-                BookList.Clear();
-
             BookList = new ObservableCollection<BookModel>(await dataService.OnLoadAll());
+
+            var tempAuthorList = new List<AuthorModel>();
+
+            foreach (var book in BookList)
+                tempAuthorList.Add(book.Author);
+
+            AuthorList = new ObservableCollection<AuthorModel>(tempAuthorList.GroupBy(x => new { x.Firstname, x.Surname}).Select(x => x.First()).OrderBy(x => x.Surname).ThenBy(x => x.Firstname).ToList());
         }
         catch (Exception ex)
         {
             Console.WriteLine(ex.Message);
         }
-
     }
+
+
+    
     [RelayCommand]
     public async Task GoToCreateBook()
     {
         var popup = serviceProvider.GetRequiredService<CreateEditBookPopup>();
         await Shell.Current.CurrentPage.ShowPopupAsync(popup);
-    }
-    [RelayCommand]
-    public async Task OnEdit(BookModel book)
-    {
-        //
-    }
-    [RelayCommand]
-    public async Task OnDelete(BookModel book)
-    {
-        var confirmed = await Shell.Current.DisplayAlert("Löschen", $"Buch \"{book.Title}\" wirklich löschen?", "Ja", "Nein");
-        if (confirmed)
-        {
-            var result = await dataService.OnDeleteBook(book.Id);
-            if (result)
-                BookList.Remove(book);
-        }
-    }
-    [RelayCommand]
-    public async Task OpenBookDetails(BookModel book)
-    {
-        try
-        {
-            var popup = serviceProvider.GetRequiredService<DetailBookPopup>();
-            await Shell.Current.CurrentPage.ShowPopupAsync(popup);
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"ERROR -> {ex.Message}");
-        }
-
     }
 }
