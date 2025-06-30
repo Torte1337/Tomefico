@@ -10,13 +10,19 @@ public class DataService
 {
     private readonly TomeContext context;
     private readonly LogService logService;
-    public DataService(TomeContext context, LogService logService)
+    private readonly PathService pathService;
+    public DataService(TomeContext context, LogService logService, PathService pathService)
     {
         this.context = context;
         this.logService = logService;
+        this.pathService = pathService;
 
         _ = OnCheckAndCreateDatabase();
     }
+    /// <summary>
+    /// Methode prüft die Datenbank oder erstellt sie neu wenn sie nicht existiert
+    /// </summary>
+    /// <returns></returns>
     private async Task OnCheckAndCreateDatabase()
     {
         try
@@ -32,6 +38,103 @@ public class DataService
             await logService.OnLog("Fehler beim erstellen / laden der Datenbank", ex.Message, DateTime.Now, LogStatus.Error);
         }
     }
+    /// <summary>
+    /// Methode setzt die Datenbank zurück und erstellt sie von null auf neu
+    /// </summary>
+    /// <returns></returns>
+    public async Task<bool> OnResetTheDatabase()
+    {
+        try
+        {
+            await context.Database.EnsureDeletedAsync();
+            await OnCheckAndCreateDatabase();
+            return true;
+        }
+        catch (Exception ex)
+        {
+            await logService.OnLog("Fehler beim zurücksetzen der Datenbank", ex.Message, DateTime.Now, LogStatus.Error);
+            return false;
+        }
+    }
+    /// <summary>
+    /// Methode importiert eine vorhandene Datenbank
+    /// </summary>
+    /// <param name="importPath"></param>
+    /// <returns></returns>
+    /// <exception cref="FileNotFoundException"></exception>
+    public async Task<bool> OnImportDatabase(string importPath)
+    {
+        try
+        {
+            var dbpath = context.Database.GetDbConnection().DataSource;
+
+            if (!File.Exists(importPath))
+                throw new FileNotFoundException("Die Import-Datei existiert nicht.");
+
+            if (!IsValidSQLiteFile(importPath))
+                throw new Exception("Die gewählte Datei ist keine gültige SQLite-Datenbank.");
+
+            if (!HasExpectedSchema(importPath))
+                throw new Exception("Die gewählte Datenbank hat nicht das erwartete Schema.");
+
+            var backupPath = dbpath + ".backup";
+            if (File.Exists(dbpath))
+                File.Copy(dbpath, backupPath, overwrite: true);
+
+            File.Copy(importPath, dbpath, overwrite: true);
+
+            await OnCheckAndCreateDatabase();
+
+            await logService.OnLog("Import erfolgreich", $"Datenbank erfolgreich importiert von {importPath}", DateTime.Now, LogStatus.Info);
+            return true;           
+        }
+        catch (Exception ex)
+        {
+            await logService.OnLog("Fehler beim importieren der Datenbank", ex.Message, DateTime.Now, LogStatus.Error);
+            return false;
+        }
+    }
+    /// <summary>
+    /// Methode exportiert eine vorhandene Datenbank
+    /// </summary>
+    /// <param name="exportPath"></param>
+    /// <returns></returns>
+    /// <exception cref="FileNotFoundException"></exception>
+    public async Task<bool> OnExportDatabase(string exportPath)
+    {
+        try
+        {
+            var dbPath = context.Database.GetDbConnection().DataSource;
+            if (string.IsNullOrWhiteSpace(dbPath) || !File.Exists(dbPath))
+                throw new FileNotFoundException("Die Datenbank wurde nicht gefunden");
+
+            File.Copy(dbPath, exportPath, overwrite: true);
+            await logService.OnLog("Export erfolgreich", $"Datenbank exportiert nach {exportPath}", DateTime.Now, LogStatus.Error);
+            return true;
+        }
+        catch (Exception ex)
+        {
+            await logService.OnLog("Fehler beim Exportieren der Datenbank", ex.Message, DateTime.Now, LogStatus.Error);
+            return false;
+        }
+    }
+    public async Task<Stream?> GetDatabaseStreamAsync()
+    {
+        try
+        {
+            var dbPath = pathService.GetDatabasePath();
+            if (!File.Exists(dbPath))
+                return null;
+
+            return File.OpenRead(dbPath);
+        }
+        catch (Exception ex)
+        {
+            await logService.OnLog("Fehler beim Lesen der Datenbankdatei", ex.Message, DateTime.Now, LogStatus.Error);
+            return null;
+        }
+    }
+
     /// <summary>
     /// Methode speichert ein neues Buch in der Datenbank ab
     /// </summary>
@@ -397,6 +500,62 @@ public class DataService
     }
 
 
+    //------------------ Helfermethoden ------------------
+
+    private bool IsValidSQLiteFile(string filePath)
+    {
+        try
+        {
+            var headerBytes = new byte[16];
+            using var fs = new FileStream(filePath, FileMode.Open, FileAccess.Read);
+            fs.Read(headerBytes, 0, headerBytes.Length);
+
+            var header = System.Text.Encoding.ASCII.GetString(headerBytes);
+            return header.StartsWith("SQLite format 3");
+        }
+        catch (Exception ex)
+        {
+            return false;
+        }
+    }
+    private bool HasExpectedSchema(string filePath)
+    {
+        try
+        {
+            var requiredTables = new[] { "Books", "Authors", "Logs" };
+
+            using var connection = new Microsoft.Data.Sqlite.SqliteConnection($"Data Source={filePath}");
+            connection.Open();
+
+            var existingTables = new List<string>();
+            var command = connection.CreateCommand();
+            command.CommandText = "SELECT name FROM sqlite_master WHERE type='table' AND name='Books';";
+
+            var result = command.ExecuteScalar();
+
+            if (result == null)
+                return false;
+
+            var requiredColumns = new[] { "Id", "Title", "Status", };
+            var getColumnCmd = connection.CreateCommand();
+            getColumnCmd.CommandText = "PRAGMA table_info(Books);";
+
+            var existingColumns = new List<string>();
+            using var reader = getColumnCmd.ExecuteReader();
+            while (reader.Read())
+            {
+                var columnName = reader["name"].ToString();
+                if (!string.IsNullOrEmpty(columnName))
+                    existingColumns.Add(columnName);
+            }
+
+            return requiredColumns.All(col => existingColumns.Contains(col));
+        }
+        catch (Exception ex)
+        {
+            return false;
+        }
+    }
 
 
 }

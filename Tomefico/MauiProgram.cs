@@ -37,13 +37,15 @@ public static class MauiProgram
 		builder.Services.AddScoped<LibraryViewModel>();
 		builder.Services.AddScoped<CreateBookViewModel>();
 		builder.Services.AddScoped<DetailBookViewModel>();
+		builder.Services.AddScoped<SettingsViewModel>();
 
-		builder.Services.AddScoped<DashboardPage>();
-		builder.Services.AddScoped<LibraryPage>();
+		builder.Services.AddTransient<DashboardPage>();
+		builder.Services.AddTransient<LibraryPage>();
 		builder.Services.AddTransient<CreateEditBookPopup>();
 		builder.Services.AddTransient<DetailBookPopup>();
 		builder.Services.AddTransient<BookListPopup>();
 		builder.Services.AddTransient<AuthorListPopup>();
+		builder.Services.AddTransient<SettingsPage>();
 
 #if DEBUG
 		builder.Logging.AddDebug();
