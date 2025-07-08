@@ -22,6 +22,12 @@
             ContentTemplate="{DataTemplate views:LibraryPage}"
             Route="LibraryPage" />
         <ShellContent
+            Title="Authoren"
+            Icon="icon_library.png"
+            ContentTemplate="{DataTemplate views:AuthorPage}"
+            Route="AuthorPage" />
+
+        <ShellContent
             Title="Einstellungen"
             Icon="icon_settings.png"
             ContentTemplate="{DataTemplate views:SettingsPage}"

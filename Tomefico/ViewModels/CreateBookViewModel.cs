@@ -1,3 +1,4 @@
+using System.Collections.ObjectModel;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
@@ -16,7 +17,11 @@ public partial class CreateBookViewModel : ObservableObject
     [ObservableProperty] private string bookTitle = "";
     [ObservableProperty] private string bookDescription = "";
     [ObservableProperty] private string bookAuthor = "";
+    [ObservableProperty] private string bookAuthorFirstname = "";
+    [ObservableProperty] private string bookAuthorLastname = "";
     [ObservableProperty] private BookStatusEntryModel selectedStatusEntry;
+    [ObservableProperty] private ObservableCollection<AuthorModel> authorList = new();
+    [ObservableProperty] private AuthorModel? selectedAuthor = null;
     [ObservableProperty] private byte[]? bookCover;
     [ObservableProperty] private List<BookStatusEntryModel> statusDisplayList = Enum.GetValues(typeof(BookStatus)).Cast<BookStatus>().Select(s => new BookStatusEntryModel { Status = s }).ToList();
     public Func<Task>? RequestClose { get; set; }
@@ -25,8 +30,13 @@ public partial class CreateBookViewModel : ObservableObject
         this.logService = logService;
         this.dataService = dataService;
         SelectedStatusEntry = StatusDisplayList.First();
+        _ = OnLoadAuthorList();
     }
-
+    private async Task OnLoadAuthorList()
+    {
+        var authors = await dataService.OnGetAuthorList();
+        AuthorList = new ObservableCollection<AuthorModel>(authors);
+    }
     [RelayCommand]
     public async Task OnCreateBook()
     {
@@ -42,9 +52,10 @@ public partial class CreateBookViewModel : ObservableObject
                 await Shell.Current.DisplayAlert("Fehler", "Bitte gebe eine Buchbeschreibung ein!", "Ok");
                 return;
             }
-            if (string.IsNullOrWhiteSpace(BookAuthor))
+
+            if (SelectedAuthor == null)
             {
-                await Shell.Current.DisplayAlert("Fehler", "Bitte gebe einen Author ein!", "Ok");
+                await Shell.Current.DisplayAlert("Fehler", "Bitte wähle einen Author aus!", "Ok");
                 return;
             }
 
@@ -54,7 +65,8 @@ public partial class CreateBookViewModel : ObservableObject
                 Title = BookTitle,
                 Description = BookDescription,
                 CoverImage = BookCover ?? null,
-                Status = SelectedStatusEntry?.Status ?? BookStatus.ToRead
+                Status = SelectedStatusEntry?.Status ?? BookStatus.ToRead,
+                Author = SelectedAuthor
             };
 
             var result = await dataService.OnSaveNewBook(newBook);
@@ -66,7 +78,10 @@ public partial class CreateBookViewModel : ObservableObject
 
 
                 if (RequestClose is not null)
+                {
                     await RequestClose.Invoke();
+                    RequestClose = null;
+                }
             }
         }
         catch (Exception ex)
@@ -81,6 +96,7 @@ public partial class CreateBookViewModel : ObservableObject
             BookAuthor = "";
             SelectedStatusEntry = null;
             BookCover = null;
+            SelectedAuthor = null;
         }
     }
     [RelayCommand]
@@ -108,6 +124,21 @@ public partial class CreateBookViewModel : ObservableObject
         {
             await logService.OnLog("Fehler beim Auswählen des Covers", ex.Message, DateTime.Now, LogStatus.Error);
             return;
+        }
+    }
+    [RelayCommand]
+    public async Task OnCancel()
+    {
+        BookTitle = "";
+        BookDescription = "";
+        BookAuthor = "";
+        SelectedStatusEntry = null;
+        BookCover = null;
+        SelectedAuthor = null;       
+        if (RequestClose is not null)
+        {
+            await RequestClose.Invoke();
+            RequestClose = null;
         }
     }
 }

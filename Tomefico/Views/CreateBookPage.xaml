@@ -22,11 +22,6 @@
                         <Entry Placeholder="Buchbeschreibung..." Text="{Binding BookDescription}"/>
                     </Border>
 
-                    <!-- Author -->
-                    <Border Stroke="Gray" StrokeThickness="1" BackgroundColor="WhiteSmoke" StrokeShape="RoundRectangle 12" Padding="8">
-                        <Entry Placeholder="Author..." Text="{Binding BookAuthor}"/>
-                    </Border>
-
                     <!-- Status -->
                     <Label Text="Status" />
                     <Border Stroke="Gray" StrokeThickness="1" BackgroundColor="WhiteSmoke" StrokeShape="RoundRectangle 12" Padding="8">
@@ -35,6 +30,8 @@
                             ItemDisplayBinding="{Binding DisplayName}"
                             SelectedItem="{Binding BookStatus}" />
                     </Border>
+
+
 
                    <!-- Cover auswählen -->
                     <Button Text="Cover auswählen" Command="{Binding PickCoverImageCommand}" BackgroundColor="Gray"/>

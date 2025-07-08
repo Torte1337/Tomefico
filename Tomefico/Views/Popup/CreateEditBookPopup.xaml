@@ -23,7 +23,7 @@
                 <VerticalStackLayout Spacing="10">
 
                     <!-- Titel -->
-                    <Label Text="📖 Neues Buch"
+                    <Label Text="📖 Neues Buch hinzufügen"
                            FontSize="22"
                            FontAttributes="Bold"
                            HorizontalOptions="Center"
@@ -33,12 +33,6 @@
                     <Border Stroke="LightGray" StrokeThickness="1" StrokeShape="RoundRectangle 12" BackgroundColor="#F7F7F7" Padding="8">
                         <Entry Placeholder="Titel..." Text="{Binding BookTitle}" FontSize="16"/>
                     </Border>
-
-                    <!-- Autor -->
-                    <Border Stroke="LightGray" StrokeThickness="1" StrokeShape="RoundRectangle 12" BackgroundColor="#F7F7F7" Padding="8">
-                        <Entry Placeholder="Autor..." Text="{Binding BookAuthor}" FontSize="16"/>
-                    </Border>
-
                     <!-- Beschreibung -->
                     <Border Stroke="LightGray" StrokeThickness="1" StrokeShape="RoundRectangle 12" BackgroundColor="#F7F7F7" Padding="8">
                         <Editor Placeholder="Beschreibung..."
@@ -46,6 +40,17 @@
                                 Text="{Binding BookDescription}"
                                 FontSize="15" />
                     </Border>
+
+                    <!-- Author -->
+                    <Label Text="Author" />
+                    <Border Stroke="Gray" StrokeThickness="1" BackgroundColor="WhiteSmoke" StrokeShape="RoundRectangle 12" Padding="8">
+                        <Picker BackgroundColor="WhiteSmoke"
+                            ItemsSource="{Binding AuthorList}"
+                            ItemDisplayBinding="{Binding Name}"
+                            SelectedItem="{Binding SelectedAuthor}"/>
+                    </Border>
+
+
 
                     <!-- Status -->
                     <Label Text="Status" FontSize="14" FontAttributes="Bold" TextColor="#444"/>
@@ -55,11 +60,20 @@
 
                     <!-- Cover -->
                     <Button Text="📷 Cover auswählen" Command="{Binding PickCoverImageCommand}" BackgroundColor="#E0E0E0" TextColor="#333" CornerRadius="12" FontSize="15"/>
-                    <Image HeightRequest="100" Margin="0,8,0,0" Aspect="AspectFill" Source="{Binding BookCover, Converter={StaticResource ByteArrayToImageSourceConverter}}" />
+                    <Image HeightRequest="50" Margin="0,8,0,0" Aspect="AspectFill" Source="{Binding BookCover, Converter={StaticResource ByteArrayToImageSourceConverter}}" />
 
                     <Button Text="Speichern"
                                 Command="{Binding CreateBookCommand}"
                                 BackgroundColor="#DA5B38"
+                                TextColor="White"
+                                FontAttributes="Bold"
+                                CornerRadius="12"
+                                HorizontalOptions="Fill"
+                                FontSize="15"/>
+
+                    <Button Text="Abbrechen"
+                                Command="{Binding CancelCommand}"
+                                BackgroundColor="#FFDA3838"
                                 TextColor="White"
                                 FontAttributes="Bold"
                                 CornerRadius="12"

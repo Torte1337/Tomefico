@@ -3,6 +3,7 @@ using Android.Service.Autofill;
 using CommunityToolkit.Maui.Storage;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Java.Nio.FileNio;
 using Microsoft.EntityFrameworkCore;
 using Tomefico.Service;
 
@@ -26,22 +27,17 @@ public partial class SettingsViewModel : ObservableObject
     {
         try
         {
-            var stream = await dataService.GetDatabaseStreamAsync();
-            if (stream is null)
-            {
-                await Shell.Current.DisplayAlert("Fehler", "Datenbank konnte nicht geladen werden.", "OK");
-                return;
-            }
+            var dbPath = pathService.GetDatabasePath();
+            using var sourceStream = new FileStream(dbPath, FileMode.Open, FileAccess.Read);
 
-            var result = await fileSaver.SaveAsync(
-                "tomefico.db",
-                "application/octet-stream",
-                stream);
+            var fileName = $"tomfico.db";
+            var fileResult = await fileSaver.SaveAsync(fileName, sourceStream, default);
 
-            if (result.IsSuccessful)
-                await Shell.Current.DisplayAlert("Erfolg", "Datenbank exportiert.", "OK");
+            if (fileResult.IsSuccessful)
+                await Shell.Current.DisplayAlert("Erfolg", "Datenbank exportiert!", "Ok");
             else
-                await Shell.Current.DisplayAlert("Fehler", "Export abgebrochen oder fehlgeschlagen.", "OK");                    
+                await Shell.Current.DisplayAlert("Fehler", "Speichern fehlgeschalgen", "Ok");            
+
         }
         catch (Exception ex)
         {
@@ -53,27 +49,36 @@ public partial class SettingsViewModel : ObservableObject
     {
         try
         {
-            var customFileType = new FilePickerFileType(new Dictionary<DevicePlatform, IEnumerable<string>>
+            // 1. Backup-Datei wählen
+            var result = await FilePicker.Default.PickAsync(new PickOptions
             {
-                { DevicePlatform.Android, new[] {".db", ".sqlite"}},
-                { DevicePlatform.iOS, new[] {".db",".sqlite"}}
-            });
-            var result = await FilePicker.PickAsync(new PickOptions
-            {
-                PickerTitle = "Importiere Datenbank",
-                FileTypes = customFileType
+                FileTypes = FilePickerFileType.Pdf, // SQLite-Typen sind nicht vordefiniert
+                PickerTitle = "Wähle eine Datenbank zum Importieren"
             });
 
-            if (result != null)
-            {
-                var filePath = result.FullPath;
-                var success = await dataService.OnImportDatabase(filePath);
+            if (result == null) return;
 
-                if (success)
-                    await Shell.Current.DisplayAlert("Erfolg", "Datenbank erfolgreich importiert.", "OK");
-                else
-                    await Shell.Current.DisplayAlert("Fehler", "Import der Datenbank fehlgeschlagen.", "OK");
+            // 2. Temporären Pfad für die neue DB erstellen
+            var tempPath = System.IO.Path.Combine(Microsoft.Maui.Storage.FileSystem.CacheDirectory, "tomefico.db");
+            var targetPath = pathService.GetDatabasePath();
+
+            // 3. Vorhandene DB sichern
+            var backupPath = System.IO.Path.Combine(Microsoft.Maui.Storage.FileSystem.CacheDirectory, "tomefico.db");
+            if (File.Exists(targetPath))
+            {
+                File.Copy(targetPath, backupPath, true);
+                File.Delete(targetPath);
             }
+
+            // 4. Neue Datei kopieren
+            using var sourceStream = await result.OpenReadAsync();
+            using var targetStream = File.Create(targetPath);
+            await sourceStream.CopyToAsync(targetStream);
+
+            // 5. EF Core Context neu laden
+            
+
+            await Shell.Current.DisplayAlert("Erfolg", "Datenbank importiert!", "OK");
         }
         catch (Exception ex)
         {

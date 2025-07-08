@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Tomefico.Views.SettingsPage"
              BackgroundColor="#FDE0CD"
-             xmlns:pm="clr-namespace:Tomefico.ViewModels"
+             xmlns:vm="clr-namespace:Tomefico.ViewModels"
              xmlns:models="clr-namespace:Tomefico.Models">
 
     <VerticalStackLayout Spacing="10" Margin="10" HorizontalOptions="Center" VerticalOptions="Center">

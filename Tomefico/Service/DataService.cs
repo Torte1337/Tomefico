@@ -38,6 +38,17 @@ public class DataService
             await logService.OnLog("Fehler beim erstellen / laden der Datenbank", ex.Message, DateTime.Now, LogStatus.Error);
         }
     }
+    public async Task OnReconnect()
+    {
+        try
+        {
+            await context.DisposeAsync();
+        }
+        catch (Exception ex)
+        {
+            await logService.OnLog("Fehler beim importieren der Datenbank", ex.Message, DateTime.Now, LogStatus.Error);
+        }
+    }
     /// <summary>
     /// Methode setzt die Datenbank zurück und erstellt sie von null auf neu
     /// </summary>
@@ -475,7 +486,23 @@ public class DataService
             return false;
         }
     }
-
+    /// <summary>
+    /// Methode lädt alle Authoren aus der Datenbank
+    /// </summary>
+    /// <returns></returns>
+    public async Task<List<AuthorModel>> OnGetAuthorList()
+    {
+        try
+        {
+            var list = await context.Authors.ToListAsync();
+            return list;
+        }
+        catch (Exception ex)
+        {
+            await logService.OnLog("Fehler beim Laden der Authorenliste", ex.Message, DateTime.Now, LogStatus.Error);
+            return new List<AuthorModel>();
+        }
+    }
     /// <summary>
     /// Methode lädt alle Bücher des Authors
     /// </summary>

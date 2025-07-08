@@ -11,6 +11,10 @@ public class PathService
         string dbPath = Path.Combine(FileSystem.AppDataDirectory, DbName);
         return dbPath;
     }
+    public string GetPureDatabasePath()
+    {
+        return FileSystem.AppDataDirectory;
+    }
     public string GetSQLiteConnectionString()
     {
         return $"Filename={GetDatabasePath()}";

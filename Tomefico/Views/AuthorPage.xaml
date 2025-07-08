@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Tomefico.Views.AuthorPage"
+             BackgroundColor="#FDE0CD"
+             x:Name="AuthorPageView"
+             xmlns:pm="Tomefico.ViewModels"
+             xmlns:models="clr-namespace:Tomefico.Models">
+
+    <VerticalStackLayout Padding="10" Margin="10">
+        <HorizontalStackLayout HorizontalOptions="End" Margin="0,0,0,10">
+            <Button Text="?"
+                WidthRequest="35"
+                HeightRequest="35"
+                FontAttributes="Bold"
+                FontSize="20"
+                BackgroundColor="#DA5B38"
+                TextColor="White"
+                CornerRadius="40"
+                VerticalOptions="Center"
+                HorizontalOptions="Center"
+                Command="{Binding ShowSwipeHelpCommand}"/>
+        </HorizontalStackLayout>
+
+
+        <HorizontalStackLayout HorizontalOptions="Center" Margin="0,20,0,0">
+            <Button Text="Author hinzufügen" 
+                    Margin="10" 
+                    BackgroundColor="#DA5B38" 
+                    HorizontalOptions="Center" 
+                    Command="{Binding ShowPopupCreateAuthorCommand}"/>
+        </HorizontalStackLayout>
+        
+        <CollectionView HorizontalOptions="Center"
+            HorizontalScrollBarVisibility="Never"
+            VerticalScrollBarVisibility="Default"
+            ItemsSource="{Binding AuthorList}">
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <SwipeView>
+                        <SwipeView.RightItems>
+                            <SwipeItems Mode="Execute">
+                                <SwipeItem Text="Bearbeiten"
+                                            BackgroundColor="Orange"
+                                            CommandParameter="{Binding .}"
+                                            Command="{Binding BindingContext.ShowPopupEditAuthorCommand, Source={x:Reference AuthorPageView}}"/>
+                            </SwipeItems>
+                        </SwipeView.RightItems>
+                        <SwipeView.LeftItems>
+                            <SwipeItems Mode="Execute">
+                                <SwipeItem Text="Löschen" 
+                                    BackgroundColor="Red"
+                                    IsDestructive="True"
+                                    CommandParameter="{Binding .}"
+                                    Command="{Binding BindingContext.DeleteAuthorCommand, Source={x:Reference AuthorPageView}}"/>
+                            </SwipeItems>
+                        </SwipeView.LeftItems>
+
+                        <Grid Padding="10" HorizontalOptions="Center">
+                            <Border StrokeShape="RoundRectangle 5" BackgroundColor="#FFD2A271" WidthRequest="150" HeightRequest="50">
+                                <Label Text="{Binding Name}" FontAttributes="Bold" FontSize="16" HorizontalOptions="Center" VerticalOptions="Center" HorizontalTextAlignment="Center" VerticalTextAlignment="Center"/>
+                            </Border>
+                        </Grid>
+                    </SwipeView>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+
+
+    </VerticalStackLayout>
+</ContentPage>

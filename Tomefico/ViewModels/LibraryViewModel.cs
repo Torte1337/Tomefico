@@ -1,5 +1,6 @@
 using System;
 using System.Collections.ObjectModel;
+using System.Threading.Tasks;
 using CommunityToolkit.Maui.Views;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -24,9 +25,8 @@ public partial class LibraryViewModel : ObservableObject
     {
         this.dataService = dataService;
         this.serviceProvider = serviceProvider;
-
+        _ = OnLoadLists();
     }
-
     public async Task OnLoadLists()
     {
         try
@@ -36,9 +36,12 @@ public partial class LibraryViewModel : ObservableObject
             var tempAuthorList = new List<AuthorModel>();
 
             foreach (var book in BookList)
-                tempAuthorList.Add(book.Author);
+            {
+                if (book.Author != null)
+                    tempAuthorList.Add(book.Author); 
+            }
 
-            AuthorList = new ObservableCollection<AuthorModel>(tempAuthorList.GroupBy(x => new { x.Firstname, x.Surname}).Select(x => x.First()).OrderBy(x => x.Surname).ThenBy(x => x.Firstname).ToList());
+            AuthorList = new ObservableCollection<AuthorModel>(tempAuthorList.GroupBy(x => new { x.Firstname, x.Surname }).Select(x => x.First()).OrderBy(x => x.Surname).ThenBy(x => x.Firstname).ToList());
         }
         catch (Exception ex)
         {

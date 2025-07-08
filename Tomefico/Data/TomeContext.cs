@@ -11,7 +11,7 @@ public class TomeContext : DbContext
     public DbSet<AuthorModel> Authors { get; set; }
     public DbSet<LogModel> Logs { get; set; }
     private readonly PathService pathService;
-    
+
     public TomeContext(DbContextOptions<TomeContext> options, PathService pathService) : base(options) { this.pathService = pathService; }
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {

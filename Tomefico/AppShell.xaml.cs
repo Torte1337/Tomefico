@@ -10,6 +10,7 @@ public partial class AppShell : Shell
 
 		Routing.RegisterRoute(nameof(DashboardPage), typeof(DashboardPage));
 		Routing.RegisterRoute(nameof(LibraryPage), typeof(LibraryPage));
-		Routing.RegisterRoute(nameof(SettingsPage),typeof(SettingsPage));
+		Routing.RegisterRoute(nameof(SettingsPage), typeof(SettingsPage));
+		Routing.RegisterRoute(nameof(AuthorPage), typeof(AuthorPage));
 	}
 }
