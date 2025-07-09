@@ -157,8 +157,15 @@ public class DataService
         {
             if (newBook == null)
                 return false;
+                
+            var author = await context.Authors.FindAsync(newBook.Author.Id);
 
+            if (author == null)
+            {
+                return false;
+            }
             context.Books.Add(newBook);
+            author.Books.Add(newBook);
             await context.SaveChangesAsync();
             await logService.OnLog("Neues Buch erfolgreich abgespeichert", $"Das Buch mit dem Titel {newBook.Title} wurde erfolgreich in der Datenbank gespeichert", DateTime.Now, LogStatus.Info);
             return true;
@@ -295,7 +302,12 @@ public class DataService
             if (existingBook == null)
                 return false;
 
+            var authorExist = await context.Authors.FindAsync(existingBook.Author.Id);
+            if (authorExist == null)
+                return false;
+
             context.Books.Remove(existingBook);
+            authorExist.Books.Remove(existingBook);
             await context.SaveChangesAsync();
             return true;
         }

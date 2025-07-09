@@ -56,6 +56,7 @@ public static class MauiProgram
 		services.AddScoped<DetailBookViewModel>();
 		services.AddScoped<SettingsViewModel>();
 		services.AddScoped<AuthorViewModel>();
+		services.AddScoped<EditBookViewModel>();
 	}
 	private static void AddPages(this IServiceCollection services)
 	{
@@ -68,5 +69,6 @@ public static class MauiProgram
 		services.AddTransient<SettingsPage>();
 		services.AddTransient<AuthorPage>();
 		services.AddTransient<AuthorCreateEditPopup>();
+		services.AddTransient<EditBookPopup>();
 	}
 }

@@ -4,22 +4,84 @@
              x:Class="Tomefico.Views.LibraryPage"
              BackgroundColor="#FDE0CD"
              xmlns:pm="Tomefico.ViewModels"
+             x:Name="LibraryPageView"
+             xmlns:converters="clr-namespace:Tomefico.Converter"
              xmlns:models="clr-namespace:Tomefico.Models">
+
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <converters:SelectedToEnabledConverter x:Key="SelectedToEnabledConverter" />
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
     <VerticalStackLayout Padding="10" Margin="10">
         <HorizontalStackLayout HorizontalOptions="Center" Margin="0,20,0,0">
             <Button Text="Buch hinzufügen" Margin="10" BackgroundColor="#DA5B38" HorizontalOptions="Center" Command="{Binding GoToCreateBookCommand}"/>
         </HorizontalStackLayout>
 
-        <CollectionView HorizontalOptions="Start"
-            HorizontalScrollBarVisibility="Never"
-            VerticalScrollBarVisibility="Default"
-            ItemsSource="{Binding AuthorList}">
-            <CollectionView.ItemTemplate>
-                <DataTemplate>
-                    <Button Text="{Binding Surname}"/>
-                </DataTemplate>
-            </CollectionView.ItemTemplate>
-        </CollectionView>
+        <Grid ColumnDefinitions="Auto, *" Padding="10">
+
+            <!-- A-Z Buchstabenliste -->
+            <ScrollView Grid.Column="0" VerticalScrollBarVisibility="Always">
+                <VerticalStackLayout Spacing="5">
+                    <CollectionView ItemsSource="{Binding AuthorInitals}">
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate>
+                                <Button Text="{Binding .}"
+                                        Command="{Binding BindingContext.SelectInitialCommand, Source={x:Reference LibraryPageView}}"
+                                        CommandParameter="{Binding .}"
+                                        Padding="5"
+                                        Margin="5"
+                                        HeightRequest="40"
+                                        WidthRequest="40">
+                                    </Button>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+                </VerticalStackLayout>
+            </ScrollView>
+
+
+
+
+            <!-- Autoren & Bücher -->
+            <CollectionView Grid.Column="1"
+                            HorizontalOptions="Center"
+                            Margin="60,0,0,0"
+                            ItemsSource="{Binding FilteredAuthors}">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <VerticalStackLayout Padding="5">
+                            <Label Text="{Binding Name}"
+                                FontSize="20"
+                                FontAttributes="Bold"
+                                Margin="0,5"/>
+
+                            <CollectionView ItemsSource="{Binding Books}">
+                                <CollectionView.ItemTemplate>
+                                    <DataTemplate>
+                                        <Grid Padding="5">
+                                            <Grid.GestureRecognizers>
+                                                <TapGestureRecognizer
+                                                    Command="{Binding BindingContext.ClickedBookCommand, Source={x:Reference LibraryPageView}}"
+                                                    CommandParameter="{Binding .}" />
+                                            </Grid.GestureRecognizers>
+
+                                            <Label Text="{Binding Title}"
+                                                FontSize="17"
+                                                FontAttributes="Italic"
+                                                TextColor="Black"
+                                                VerticalOptions="Center"/>
+                                        </Grid>
+                                        
+                                    </DataTemplate>
+                                </CollectionView.ItemTemplate>
+                            </CollectionView>
+                        </VerticalStackLayout>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </Grid>
 
 
     </VerticalStackLayout>

@@ -73,6 +73,7 @@ public partial class CreateBookViewModel : ObservableObject
             if (result)
             {
                 await Shell.Current.DisplayAlert("Info", "Buch wurde erfolgreich erstellt", "Ok");
+                
 
                 WeakReferenceMessenger.Default.Send(new MessageRefreshBookList());
 
