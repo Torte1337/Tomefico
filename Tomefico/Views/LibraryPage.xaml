@@ -41,9 +41,6 @@
                 </VerticalStackLayout>
             </ScrollView>
 
-
-
-
             <!-- Autoren & Bücher -->
             <CollectionView Grid.Column="1"
                             HorizontalOptions="Center"
