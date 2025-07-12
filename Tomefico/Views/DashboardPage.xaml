@@ -11,86 +11,80 @@
         <toolkit:StatusBarBehavior StatusBarColor="#FDE0CD" StatusBarStyle="LightContent"/>
     </ContentPage.Behaviors>
 
-    <ScrollView>
-        <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto"  RowSpacing="24" Margin="0,40,0,0" VerticalOptions="Center">
-            <Label Text="Hallo, Willkommen zurück!" FontAttributes="Bold" FontSize="20" Grid.Row="0" HorizontalOptions="Center" HorizontalTextAlignment="Center"/>
-            <!-- Bücher Buttons -->
-            <HorizontalStackLayout Grid.Row="1" HorizontalOptions="Center" Spacing="15">
-                <Border StrokeShape="RoundRectangle 15"
-                        Stroke="#FFFFFF66" BackgroundColor="#FFFFFF99"
-                        WidthRequest="150" HeightRequest="150" Shadow="Gray 8 8">
-                        <VerticalStackLayout HorizontalOptions="Center" VerticalOptions="Center">
-                            <Label Text="📚" FontSize="30" HorizontalTextAlignment="Center"/>
-                            <Label Text="Wunschliste" HorizontalTextAlignment="Center"/>
-                        </VerticalStackLayout>
-                        <Border.GestureRecognizers>
-                            <TapGestureRecognizer Command="{Binding OpenWishlistCommand}"/>
-                        </Border.GestureRecognizers>
-                </Border>
-
-                <Border StrokeShape="RoundRectangle 15"
-                        Stroke="#FFFFFF66" BackgroundColor="#FFFFFF99"
-                        WidthRequest="150" HeightRequest="150" Shadow="Gray 8 8">
-                        <VerticalStackLayout HorizontalOptions="Center" VerticalOptions="Center">
-                            <Label Text="📙" FontSize="30" HorizontalTextAlignment="Center"/>
-                            <Label Text="Am lesen" HorizontalTextAlignment="Center"/>
-                        </VerticalStackLayout>
-                        <Border.GestureRecognizers>
-                            <TapGestureRecognizer Command="{Binding OpenReadingListCommand}"/>
-                        </Border.GestureRecognizers>
-                </Border>
-            </HorizontalStackLayout>
-            <HorizontalStackLayout Grid.Row="2" HorizontalOptions="Center" Spacing="15">
-                <Border StrokeShape="RoundRectangle 15"
-                        Stroke="#FFFFFF66" BackgroundColor="#FFFFFF99"
-                        WidthRequest="150" HeightRequest="150" Shadow="Gray 8 8">
-                        <VerticalStackLayout HorizontalOptions="Center" VerticalOptions="Center">
-                            <Label Text="📕" FontSize="30" HorizontalTextAlignment="Center"/>
-                            <Label Text="Noch zu lesen" HorizontalTextAlignment="Center"/>
-                        </VerticalStackLayout>
-                        <Border.GestureRecognizers>
-                            <TapGestureRecognizer Command="{Binding OpenToReadListCommand}"/>
-                        </Border.GestureRecognizers>
-                </Border>
-
-                <Border StrokeShape="RoundRectangle 15"
-                        Stroke="#FFFFFF66" BackgroundColor="#FFFFFF99"
-                        WidthRequest="150" HeightRequest="150" Shadow="Gray 8 8">
-                        <VerticalStackLayout HorizontalOptions="Center" VerticalOptions="Center">
-                            <Label Text="📗" FontSize="30" HorizontalTextAlignment="Center"/>
-                            <Label Text="Fertig gelesen" HorizontalTextAlignment="Center"/>
-                        </VerticalStackLayout>
-                        <Border.GestureRecognizers>
-                            <TapGestureRecognizer Command="{Binding OpenFinishedListCommand}"/>
-                        </Border.GestureRecognizers>
-                </Border>
-            </HorizontalStackLayout>
-            <HorizontalStackLayout Grid.Row="3" HorizontalOptions="Center" Spacing="15">
-                <Border StrokeShape="RoundRectangle 15"
-                        Stroke="#FFFFFF66" BackgroundColor="#FFFFFF99"
-                        WidthRequest="150" HeightRequest="150" Shadow="Gray 8 8">
-                        <VerticalStackLayout HorizontalOptions="Center" VerticalOptions="Center">
-                            <Label Text="❤️" FontSize="30" HorizontalTextAlignment="Center"/>
-                            <Label Text="Favoriten" HorizontalTextAlignment="Center"/>
-                        </VerticalStackLayout>
-                        <Border.GestureRecognizers>
-                            <TapGestureRecognizer Command="{Binding OpenToReadListCommand}"/>
-                        </Border.GestureRecognizers>
-                </Border>
-
-                <Border StrokeShape="RoundRectangle 15"
-                        Stroke="#FFFFFF66" BackgroundColor="#FFFFFF99"
-                        WidthRequest="150" HeightRequest="150" Shadow="Gray 8 8">
-                        <VerticalStackLayout HorizontalOptions="Center" VerticalOptions="Center">
-                            <Label Text="✒️" FontSize="30" HorizontalTextAlignment="Center"/>
-                            <Label Text="Authoren" HorizontalTextAlignment="Center"/>
-                        </VerticalStackLayout>
-                        <Border.GestureRecognizers>
-                            <TapGestureRecognizer Command="{Binding OpenAuthorListCommand}"/>
-                        </Border.GestureRecognizers>
-                </Border>
-            </HorizontalStackLayout>
-
-        </Grid>
-    </ScrollView>    
+    <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto"  RowSpacing="24" Margin="0,40,0,0" VerticalOptions="Center">
+        <Label Text="Hallo, Willkommen zurück!" FontAttributes="Bold" TextColor="Black" FontSize="20" Grid.Row="0" HorizontalOptions="Center" HorizontalTextAlignment="Center"/>
+        <!-- Bücher Buttons -->
+        <HorizontalStackLayout Grid.Row="1" HorizontalOptions="Center" Spacing="15">
+            <Border StrokeShape="RoundRectangle 15"
+                    Stroke="#FFFFFF66" BackgroundColor="#FFFFFF99"
+                    WidthRequest="150" HeightRequest="150">
+                    <VerticalStackLayout HorizontalOptions="Center" VerticalOptions="Center">
+                        <Label Text="📚" FontSize="30" HorizontalTextAlignment="Center"/>
+                        <Label Text="Wunschliste" HorizontalTextAlignment="Center" TextColor="Black"/>
+                    </VerticalStackLayout>
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding OpenWishlistCommand}"/>
+                    </Border.GestureRecognizers>
+            </Border>
+            <Border StrokeShape="RoundRectangle 15"
+                    Stroke="#FFFFFF66" BackgroundColor="#FFFFFF99"
+                    WidthRequest="150" HeightRequest="150">
+                    <VerticalStackLayout HorizontalOptions="Center" VerticalOptions="Center">
+                        <Label Text="📙" FontSize="30" HorizontalTextAlignment="Center"/>
+                        <Label Text="Am lesen" HorizontalTextAlignment="Center" TextColor="Black"/>
+                    </VerticalStackLayout>
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding OpenReadingListCommand}"/>
+                    </Border.GestureRecognizers>
+            </Border>
+        </HorizontalStackLayout>
+        <HorizontalStackLayout Grid.Row="2" HorizontalOptions="Center" Spacing="15">
+            <Border StrokeShape="RoundRectangle 15"
+                    Stroke="#FFFFFF66" BackgroundColor="#FFFFFF99"
+                    WidthRequest="150" HeightRequest="150">
+                    <VerticalStackLayout HorizontalOptions="Center" VerticalOptions="Center">
+                        <Label Text="📕" FontSize="30" HorizontalTextAlignment="Center"/>
+                        <Label Text="Noch zu lesen" HorizontalTextAlignment="Center" TextColor="Black"/>
+                    </VerticalStackLayout>
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding OpenToReadListCommand}"/>
+                    </Border.GestureRecognizers>
+            </Border>
+            <Border StrokeShape="RoundRectangle 15"
+                    Stroke="#FFFFFF66" BackgroundColor="#FFFFFF99"
+                    WidthRequest="150" HeightRequest="150">
+                    <VerticalStackLayout HorizontalOptions="Center" VerticalOptions="Center">
+                        <Label Text="📗" FontSize="30" HorizontalTextAlignment="Center"/>
+                        <Label Text="Fertig gelesen" HorizontalTextAlignment="Center" TextColor="Black"/>
+                    </VerticalStackLayout>
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding OpenFinishedListCommand}"/>
+                    </Border.GestureRecognizers>
+            </Border>
+        </HorizontalStackLayout>
+        <HorizontalStackLayout Grid.Row="3" HorizontalOptions="Center" Spacing="15">
+            <Border StrokeShape="RoundRectangle 15"
+                    Stroke="#FFFFFF66" BackgroundColor="#FFFFFF99"
+                    WidthRequest="150" HeightRequest="150">
+                    <VerticalStackLayout HorizontalOptions="Center" VerticalOptions="Center">
+                        <Label Text="❤️" FontSize="30" HorizontalTextAlignment="Center"/>
+                        <Label Text="Favoriten" HorizontalTextAlignment="Center" TextColor="Black"/>
+                    </VerticalStackLayout>
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding OpenFavoriteListCommand}"/>
+                    </Border.GestureRecognizers>
+            </Border>
+            <Border StrokeShape="RoundRectangle 15"
+                    Stroke="#FFFFFF66" BackgroundColor="#FFFFFF99"
+                    WidthRequest="150" HeightRequest="150">
+                    <VerticalStackLayout HorizontalOptions="Center" VerticalOptions="Center">
+                        <Label Text="✒️" FontSize="30" HorizontalTextAlignment="Center"/>
+                        <Label Text="Autoren" HorizontalTextAlignment="Center" TextColor="Black"/>
+                    </VerticalStackLayout>
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding OpenAuthorListCommand}"/>
+                    </Border.GestureRecognizers>
+            </Border>
+        </HorizontalStackLayout>
+    </Grid>
 </ContentPage>

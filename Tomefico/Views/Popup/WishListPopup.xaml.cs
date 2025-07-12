@@ -1,11 +1,10 @@
-using Tomefico.ViewModels;
 using Tomefico.ViewModels.PopupViewModels;
 
 namespace Tomefico.Views.Popup;
 
-public partial class AuthorListPopup : CommunityToolkit.Maui.Views.Popup
+public partial class WishListPopup : CommunityToolkit.Maui.Views.Popup
 {
-	public AuthorListPopup(AuthorListPopupViewModel vm)
+	public WishListPopup(WishListPopupViewModel vm)
 	{
 		InitializeComponent();
 		BindingContext = vm;

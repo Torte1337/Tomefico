@@ -15,26 +15,25 @@
             BackgroundColor="White"
             Padding="20"
             WidthRequest="320"
-            MaximumHeightRequest="350"
-            Shadow="5">
+            MaximumHeightRequest="350">
 
             <ScrollView>
                 <VerticalStackLayout Spacing="10">
 
                     
-                    <!-- Vorname des Authors -->
+                    <!-- Vorname des Autors -->
                     <Border Stroke="LightGray" StrokeThickness="1" StrokeShape="RoundRectangle 12" BackgroundColor="#F7F7F7" Padding="8">
-                        <Entry Placeholder="Vorname..." Text="{Binding AuthorFirstname}" FontSize="16"/>
+                        <Entry Placeholder="Vorname..." PlaceholderColor="Gray" TextColor="Black" Text="{Binding AuthorFirstname}" FontSize="16"/>
                     </Border>
-                    <!-- Nachname des Authors -->
+                    <!-- Nachname des Autors -->
                     <Border Stroke="LightGray" StrokeThickness="1" StrokeShape="RoundRectangle 12" BackgroundColor="#F7F7F7" Padding="8">
-                        <Entry Placeholder="Nachname..." Text="{Binding AuthorSurname}" FontSize="16"/>
+                        <Entry Placeholder="Nachname..." PlaceholderColor="Gray" TextColor="Black" Text="{Binding AuthorSurname}" FontSize="16"/>
                     </Border>
 
                     <Button Text="Speichern"
                                 Command="{Binding SaveAuthorCommand}"
                                 BackgroundColor="#DA5B38"
-                                TextColor="White"
+                                TextColor="Black"
                                 FontAttributes="Bold"
                                 CornerRadius="12"
                                 HorizontalOptions="Fill"
@@ -43,7 +42,7 @@
                     <Button Text="Abbrechen"
                                 Command="{Binding CancelCommand}"
                                 BackgroundColor="#FFB90000"
-                                TextColor="White"
+                                TextColor="Black"
                                 FontAttributes="Bold"
                                 CornerRadius="12"
                                 HorizontalOptions="Fill"

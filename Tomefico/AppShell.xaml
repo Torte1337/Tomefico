@@ -22,8 +22,8 @@
             ContentTemplate="{DataTemplate views:LibraryPage}"
             Route="LibraryPage" />
         <ShellContent
-            Title="Authoren"
-            Icon="icon_library.png"
+            Title="Autoren"
+            Icon="icon_authors.png"
             ContentTemplate="{DataTemplate views:AuthorPage}"
             Route="AuthorPage" />
 

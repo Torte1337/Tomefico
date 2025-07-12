@@ -1,4 +1,3 @@
-using System.Collections.Specialized;
 using Microsoft.EntityFrameworkCore;
 using Tomefico.Data;
 using Tomefico.Enums;
@@ -10,14 +9,27 @@ public class DataService
 {
     private readonly TomeContext context;
     private readonly LogService logService;
-    private readonly PathService pathService;
-    public DataService(TomeContext context, LogService logService, PathService pathService)
+    public DataService(TomeContext context, LogService logService)
     {
         this.context = context;
         this.logService = logService;
-        this.pathService = pathService;
+    }
+    public async Task OnInitAsync()
+    {
+        try
+        {
+            var logPath = Path.Combine(FileSystem.CacheDirectory, "initlog.txt");
+            await File.WriteAllTextAsync(logPath, $"[Start] Init started at {DateTime.Now}");
 
-        _ = OnCheckAndCreateDatabase();
+            await OnCheckAndCreateDatabase();
+            await File.AppendAllTextAsync(logPath, $"\n[Success] Init completed at {DateTime.Now}");
+        }
+        catch (Exception ex)
+        {
+            var logPath = Path.Combine(FileSystem.CacheDirectory, "initlog.txt");
+            await File.AppendAllTextAsync(logPath, $"\n[ERROR] {ex.Message}");
+        }
+
     }
     /// <summary>
     /// Methode prüft die Datenbank oder erstellt sie neu wenn sie nicht existiert
@@ -28,14 +40,15 @@ public class DataService
         try
         {
             var created = await context.Database.EnsureCreatedAsync();
-            if (created)
-                await logService.OnLog("Datenbank erstellt", "SQLite-Datenbank wurde neu erstellt", DateTime.Now, LogStatus.Info);
-            else
-                Console.WriteLine("[DEBUG INFO] Datenbank vorhaden");
+            // if (created)
+            //     await logService.OnLog("Datenbank erstellt", "SQLite-Datenbank wurde neu erstellt", DateTime.Now, LogStatus.Info);
+            // else
+            //     Console.WriteLine("[DEBUG INFO] Datenbank vorhaden");
         }
         catch (Exception ex)
         {
-            await logService.OnLog("Fehler beim erstellen / laden der Datenbank", ex.Message, DateTime.Now, LogStatus.Error);
+            //await logService.OnLog("Fehler beim erstellen / laden der Datenbank", ex.Message, DateTime.Now, LogStatus.Error);
+            System.Diagnostics.Debug.WriteLine($"[FEHLER] {ex.Message}");
         }
     }
     public async Task OnReconnect()
@@ -46,7 +59,7 @@ public class DataService
         }
         catch (Exception ex)
         {
-            await logService.OnLog("Fehler beim importieren der Datenbank", ex.Message, DateTime.Now, LogStatus.Error);
+            // await logService.OnLog("Fehler beim importieren der Datenbank", ex.Message, DateTime.Now, LogStatus.Error);
         }
     }
     /// <summary>
@@ -63,7 +76,7 @@ public class DataService
         }
         catch (Exception ex)
         {
-            await logService.OnLog("Fehler beim zurücksetzen der Datenbank", ex.Message, DateTime.Now, LogStatus.Error);
+            //await logService.OnLog("Fehler beim zurücksetzen der Datenbank", ex.Message, DateTime.Now, LogStatus.Error);
             return false;
         }
     }
@@ -96,7 +109,7 @@ public class DataService
 
             await OnCheckAndCreateDatabase();
 
-            await logService.OnLog("Import erfolgreich", $"Datenbank erfolgreich importiert von {importPath}", DateTime.Now, LogStatus.Info);
+            //await logService.OnLog("Import erfolgreich", $"Datenbank erfolgreich importiert von {importPath}", DateTime.Now, LogStatus.Info);
             return true;           
         }
         catch (Exception ex)
@@ -133,7 +146,7 @@ public class DataService
     {
         try
         {
-            var dbPath = pathService.GetDatabasePath();
+            var dbPath = PathService.GetDatabasePath();
             if (!File.Exists(dbPath))
                 return null;
 
@@ -317,6 +330,27 @@ public class DataService
             return false;
         }
     }
+    public async Task<bool> OnSetFavorite(Guid Id, bool favorite)
+    {
+        try
+        {
+            if (Id == Guid.Empty)
+                return false;
+
+            var existing = await context.Books.FindAsync(Id);
+            if (existing == null)
+                return false;
+
+            existing.IsFavorite = favorite;
+            await context.SaveChangesAsync();
+            return true;
+        }
+        catch (Exception ex)
+        {
+            await logService.OnLog("Fehler beim setzen der Favoriteneigenschaft", ex.Message, DateTime.Now, LogStatus.Error);
+            return false;
+        }
+    }
     /// <summary>
     /// Methode lädt alle Bücher, die noch zu lesen sind
     /// </summary>
@@ -402,7 +436,23 @@ public class DataService
             return new List<BookModel>();
         }
     }
-
+    /// <summary>
+    /// Methode lädt alle Bücher, die als Favoriten markiert wurden
+    /// </summary>
+    /// <returns></returns>
+    public async Task<List<BookModel>> OnLoadFavorites()
+    {
+        try
+        {
+            var result = await context.Books.Where(x => x.IsFavorite == true).ToListAsync();
+            return result;
+        }
+        catch (Exception ex)
+        {
+            await logService.OnLog("Fehler beim Laden der Favoritenliste", ex.Message, DateTime.Now, LogStatus.Error);
+            return new List<BookModel>();
+        }
+    }
 
     /// <summary>
     /// Methode erstellt einen neuen Author
@@ -458,10 +508,11 @@ public class DataService
                 exist.Surname = updateModel.Surname;
                 hasChanges = true;
             }
-
+            
             if (!hasChanges)
                 return false;
 
+            exist.Name = exist.Firstname + " " + exist.Surname;
             context.Authors.Update(exist);
             await context.SaveChangesAsync();
             return true;

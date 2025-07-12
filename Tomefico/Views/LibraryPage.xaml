@@ -16,7 +16,7 @@
 
     <VerticalStackLayout Padding="10" Margin="10">
         <HorizontalStackLayout HorizontalOptions="Center" Margin="0,20,0,0">
-            <Button Text="Buch hinzufügen" Margin="10" BackgroundColor="#DA5B38" HorizontalOptions="Center" Command="{Binding GoToCreateBookCommand}"/>
+            <Button Text="Buch hinzufügen" TextColor="Black" Margin="10" BackgroundColor="#DA5B38" HorizontalOptions="Center" Command="{Binding GoToCreateBookCommand}"/>
         </HorizontalStackLayout>
 
         <Grid ColumnDefinitions="Auto, *" Padding="10">
@@ -24,62 +24,70 @@
             <!-- A-Z Buchstabenliste -->
             <ScrollView Grid.Column="0" VerticalScrollBarVisibility="Always">
                 <VerticalStackLayout Spacing="5">
-                    <CollectionView ItemsSource="{Binding AuthorInitals}">
-                        <CollectionView.ItemTemplate>
+                    <ListView ItemsSource="{Binding AuthorInitials}">
+                        <ListView.ItemTemplate>
                             <DataTemplate>
-                                <Button Text="{Binding .}"
+                                <ViewCell>
+                                    <Button Text="{Binding Letter}"
                                         Command="{Binding BindingContext.SelectInitialCommand, Source={x:Reference LibraryPageView}}"
-                                        CommandParameter="{Binding .}"
+                                        CommandParameter="{Binding Letter}"
                                         Padding="5"
                                         Margin="5"
                                         HeightRequest="40"
-                                        WidthRequest="40">
+                                        WidthRequest="40"
+                                        TextColor="Black"
+                                        BackgroundColor="#FFFABA6C"
+                                        CornerRadius="5"
+                                        IsEnabled="{Binding IsEnabled}">
                                     </Button>
+                                </ViewCell>
                             </DataTemplate>
-                        </CollectionView.ItemTemplate>
-                    </CollectionView>
+                        </ListView.ItemTemplate>
+                    </ListView>
                 </VerticalStackLayout>
             </ScrollView>
 
             <!-- Autoren & Bücher -->
-            <CollectionView Grid.Column="1"
+            <ListView Grid.Column="1"
                             HorizontalOptions="Center"
                             Margin="60,0,0,0"
                             ItemsSource="{Binding FilteredAuthors}">
-                <CollectionView.ItemTemplate>
+                <ListView.ItemTemplate>
                     <DataTemplate>
-                        <VerticalStackLayout Padding="5">
-                            <Label Text="{Binding Name}"
-                                FontSize="20"
-                                FontAttributes="Bold"
-                                Margin="0,5"/>
+                        <ViewCell>
+                            <VerticalStackLayout Padding="5">
+                                <Label Text="{Binding Name}"
+                                    FontSize="20"
+                                    TextColor="Black"
+                                    FontAttributes="Bold"
+                                    Margin="0,5"/>
 
-                            <CollectionView ItemsSource="{Binding Books}">
-                                <CollectionView.ItemTemplate>
-                                    <DataTemplate>
-                                        <Grid Padding="5">
-                                            <Grid.GestureRecognizers>
-                                                <TapGestureRecognizer
-                                                    Command="{Binding BindingContext.ClickedBookCommand, Source={x:Reference LibraryPageView}}"
-                                                    CommandParameter="{Binding .}" />
-                                            </Grid.GestureRecognizers>
+                                <ListView ItemsSource="{Binding Books}">
+                                    <ListView.ItemTemplate>
+                                        <DataTemplate>
+                                            <ViewCell>
+                                                <Grid Padding="5">
+                                                    <Grid.GestureRecognizers>
+                                                        <TapGestureRecognizer
+                                                            Command="{Binding BindingContext.ClickedBookCommand, Source={x:Reference LibraryPageView}}"
+                                                            CommandParameter="{Binding .}" />
+                                                    </Grid.GestureRecognizers>
 
-                                            <Label Text="{Binding Title}"
-                                                FontSize="17"
-                                                FontAttributes="Italic"
-                                                TextColor="Black"
-                                                VerticalOptions="Center"/>
-                                        </Grid>
-                                        
-                                    </DataTemplate>
-                                </CollectionView.ItemTemplate>
-                            </CollectionView>
-                        </VerticalStackLayout>
+                                                    <Label Text="{Binding Title}"
+                                                        FontSize="17"
+                                                        FontAttributes="Italic"
+                                                        TextColor="Black"
+                                                        VerticalOptions="Center"/>
+                                                </Grid>
+                                            </ViewCell>
+                                        </DataTemplate>
+                                    </ListView.ItemTemplate>
+                                </ListView>
+                            </VerticalStackLayout>
+                        </ViewCell>
                     </DataTemplate>
-                </CollectionView.ItemTemplate>
-            </CollectionView>
+                </ListView.ItemTemplate>
+            </ListView>
         </Grid>
-
-
     </VerticalStackLayout>
 </ContentPage>

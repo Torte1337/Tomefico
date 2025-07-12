@@ -1,0 +1,7 @@
+<linker>
+  <assembly fullname="Tomefico">
+    <type fullname="Tomefico.Service.DataService" preserve="all" />
+    <type fullname="Tomefico.Data.TomeContext" preserve="all" />
+  </assembly>
+  <assembly fullname="Microsoft.EntityFrameworkCore.Sqlite" preserve="all" />
+</linker>

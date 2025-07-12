@@ -4,7 +4,7 @@ namespace Tomefico.Views.Popup;
 
 public partial class AuthorCreateEditPopup : CommunityToolkit.Maui.Views.Popup
 {
-	public AuthorCreateEditPopup(AuthorViewModel vm)
+	public AuthorCreateEditPopup(CreateEditAuthorViewModel vm)
 	{
 		InitializeComponent();
 		BindingContext = vm;

@@ -55,7 +55,7 @@ public partial class CreateBookViewModel : ObservableObject
 
             if (SelectedAuthor == null)
             {
-                await Shell.Current.DisplayAlert("Fehler", "Bitte wähle einen Author aus!", "Ok");
+                await Shell.Current.DisplayAlert("Fehler", "Bitte wähle einen Autor aus!", "Ok");
                 return;
             }
 

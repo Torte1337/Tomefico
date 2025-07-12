@@ -2,21 +2,22 @@ using System;
 
 namespace Tomefico.Service;
 
-public class PathService
+public static class PathService
 {
     private const string DbName = "tomefico.db";
 
-    public string GetDatabasePath()
+    public static string GetDatabasePath()
     {
         string dbPath = Path.Combine(FileSystem.AppDataDirectory, DbName);
         return dbPath;
     }
-    public string GetPureDatabasePath()
+    public static string GetPureDatabasePath()
     {
         return FileSystem.AppDataDirectory;
     }
-    public string GetSQLiteConnectionString()
+    public static string GetSQLiteConnectionString()
     {
-        return $"Filename={GetDatabasePath()}";
+        string dbPath = Path.Combine(FileSystem.AppDataDirectory, DbName);
+        return $"Filename={dbPath}";
     }
 }

@@ -42,7 +42,7 @@ public partial class App : Application
 				platformView.BackgroundTintList = Android.Content.Res.ColorStateList.ValueOf(Android.Graphics.Color.Transparent);
 			});
 		}
-		if(DeviceInfo.Current.Platform == DevicePlatform.Android)
+		if (DeviceInfo.Current.Platform == DevicePlatform.Android)
 		{
 			Microsoft.Maui.Handlers.EditorHandler.Mapper.AppendToMapping(nameof(Editor), (handler, view) =>
 			{
@@ -51,6 +51,10 @@ public partial class App : Application
 			});
 		}
 #endif
+		// Task.Run(async () =>
+		// {
+		// 	DeviceId = await Service.DeviceIdService.GetOrCreateDeviceId();
+		// }).Wait();
 	}
 
 	protected override Window CreateWindow(IActivationState? activationState)

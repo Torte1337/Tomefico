@@ -5,13 +5,12 @@ namespace Tomefico.Views.Popup;
 
 public partial class DetailBookPopup : CommunityToolkit.Maui.Views.Popup
 {
-	public DetailBookPopup(BookModel model)
+	public DetailBookPopup(DetailBookViewModel vm)
 	{
 		InitializeComponent();
-		BindingContext = new DetailBookViewModel(model);
+		BindingContext = vm;
 
-		var ctx = BindingContext as DetailBookViewModel;
-		if(ctx != null)
-			ctx.RequestClose = async () => { await this.CloseAsync(); };
+		if(vm != null)
+			vm.RequestClose = async () => { await this.CloseAsync(); };
 	}
 }

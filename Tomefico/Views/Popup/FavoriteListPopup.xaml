@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<toolkit:Popup 
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+    x:Class="Tomefico.Views.Popup.FavoriteListPopup"
+    CanBeDismissedByTappingOutsideOfPopup="True"
+    xmlns:vm="clr-namespace:Tomefico.ViewModels"
+    Color="Transparent"> 
+
+
+    <Grid VerticalOptions="Center" HorizontalOptions="Center" Padding="0">
+        <Border
+            StrokeThickness="0"
+            StrokeShape="RoundRectangle 20"
+            BackgroundColor="White"
+            Padding="20"
+            WidthRequest="320"
+            MaximumHeightRequest="650">
+            <VerticalStackLayout Spacing="5">
+                <HorizontalStackLayout HorizontalOptions="Center" Spacing="150">
+                        <Label Text="Favoriten" 
+                            VerticalOptions="Center" 
+                            HorizontalOptions="Start" 
+                            VerticalTextAlignment="Center"
+                            FontAttributes="Bold" 
+                            FontSize="18"
+                            TextColor="Black"/>
+                        <Button BackgroundColor="Transparent" 
+                            Text="X" 
+                            FontAttributes="Bold" 
+                            FontSize="16" 
+                            TextColor="Black" 
+                            HorizontalOptions="End" 
+                            Command="{Binding CancelCommand}"/>
+                    </HorizontalStackLayout>
+                <ScrollView>
+                    <ListView ItemsSource="{Binding FavoriteList}" HorizontalOptions="Center" VerticalOptions="Center">
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <ViewCell>
+                                    <Border StrokeShape="RoundRectangle 8" Margin="2" HeightRequest="50" Padding="10" BackgroundColor="#4B919191" Stroke="#66000000">
+                                        <Label Text="{Binding Title}" TextColor="Black" HorizontalTextAlignment="Start" VerticalTextAlignment="Center"/>
+                                    </Border>
+                                </ViewCell>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                </ScrollView>
+            </VerticalStackLayout>
+
+            
+        </Border>
+    </Grid>
+</toolkit:Popup>

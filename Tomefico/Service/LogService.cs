@@ -7,16 +7,19 @@ namespace Tomefico.Service;
 
 public class LogService
 {
-    private readonly TomeContext tomeContext;
-    public LogService(TomeContext tomeContext)
+    private readonly IServiceProvider serviceProvider;
+    public LogService(IServiceProvider serviceProvider)
     {
-        this.tomeContext = tomeContext;
+        this.serviceProvider = serviceProvider;
     }
 
     public async Task<bool> OnLog(string title, string Description, DateTime? dateandtime, LogStatus status)
     {
         try
         {
+            using var scope = serviceProvider.CreateScope();
+            var tomeContext = scope.ServiceProvider.GetRequiredService<TomeContext>();
+
             var log = new LogModel
             {
                 Id = Guid.NewGuid(),

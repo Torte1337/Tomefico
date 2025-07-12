@@ -1,6 +1,5 @@
 using System;
 using System.Collections.ObjectModel;
-using Android.Service.Autofill;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
@@ -49,7 +48,8 @@ public partial class EditBookViewModel : ObservableObject
         BookTitle = msg.Value.Title;
         BookDescription = msg.Value.Description;
         BookCover = msg.Value.CoverImage;
-        SelectedStatusEntry = StatusDisplayList.FirstOrDefault(x => x.Status == msg.Value.Status);
+        SelectedStatusEntry = StatusDisplayList.FirstOrDefault(x => x.Status.Equals(msg.Value.Status));
+
 
         // Autorenliste sauber laden
         var list = await dataService.OnGetAuthorList();
@@ -61,12 +61,6 @@ public partial class EditBookViewModel : ObservableObject
     [RelayCommand]
     public async Task OnSaveBook()
     {
-        book.Title = BookTitle;
-        book.Description = BookDescription;
-        book.Author = SelectedAuthor;
-        book.CoverImage = BookCover;
-        book.Status = SelectedStatusEntry.Status;
-
         var UpdatedBook = new BookUpdateModel
         {
             Id = book.Id,

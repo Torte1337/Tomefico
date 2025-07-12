@@ -14,7 +14,8 @@ public partial class LibraryPage : ContentPage
 		base.OnAppearing();
 		if (BindingContext is LibraryViewModel libraryViewModel)
 		{
-            _ = libraryViewModel.OnLoadLists();
+			libraryViewModel.IsFirstLoad = true;
+			_ = libraryViewModel.OnLoadLists();
 		}
     }
 }

@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Tomefico.ViewModels;
 using Tomefico.Views;
 using Tomefico.Views.Popup;
-using CommunityToolkit.Maui.Storage;
+using Tomefico.ViewModels.PopupViewModels;
 
 namespace Tomefico;
 
@@ -26,49 +26,55 @@ public static class MauiProgram
 
 		builder.Services.AddAppServices();
 		builder.Services.AddViewModels();
-		builder.Services.AddPages();
+		builder.Services.AddPages();	
 
-#if DEBUG
 		builder.Logging.AddDebug();
-#endif
 
 		return builder.Build();
 	}
 	private static void AddAppServices(this IServiceCollection services)
 	{
-		services.AddSingleton<PathService>();
-		services.AddSingleton<IFileSaver>(FileSaver.Default);
-
-		services.AddDbContext<TomeContext>((serviceProvider, options) =>
+		services.AddDbContext<TomeContext>(options =>
 		{
-			var pathService = serviceProvider.GetRequiredService<PathService>();
-			options.UseSqlite(pathService.GetSQLiteConnectionString());
+			options.UseSqlite(PathService.GetSQLiteConnectionString());
 		});
 
-		services.AddSingleton<DataService>();
 		services.AddSingleton<LogService>();
+		services.AddSingleton<DataService>();
 	}
 	private static void AddViewModels(this IServiceCollection services)
 	{
-		services.AddScoped<DashboardViewModel>();
-		services.AddScoped<LibraryViewModel>();
-		services.AddScoped<CreateBookViewModel>();
-		services.AddScoped<DetailBookViewModel>();
-		services.AddScoped<SettingsViewModel>();
-		services.AddScoped<AuthorViewModel>();
-		services.AddScoped<EditBookViewModel>();
+		services.AddTransient<DashboardViewModel>();
+		services.AddTransient<LibraryViewModel>();
+		services.AddTransient<CreateBookViewModel>();
+		services.AddTransient<DetailBookViewModel>();
+		services.AddTransient<SettingsViewModel>();
+		services.AddTransient<AuthorViewModel>();
+		services.AddTransient<EditBookViewModel>();
+		services.AddTransient<DetailBookViewModel>();
+		services.AddTransient<CreateEditAuthorViewModel>();
+		services.AddTransient<AuthorListPopupViewModel>();
+		services.AddTransient<FavoritePopupViewModel>();
+		services.AddTransient<WishListPopupViewModel>();
+		services.AddTransient<ToReadListPopupViewModel>();
+		services.AddTransient<ReadingListPopupViewModel>();
+		services.AddTransient<FinishListPopupViewModel>();
 	}
 	private static void AddPages(this IServiceCollection services)
 	{
 		services.AddTransient<DashboardPage>();
 		services.AddTransient<LibraryPage>();
 		services.AddTransient<CreateEditBookPopup>();
-		services.AddTransient<DetailBookPopup>();
-		services.AddTransient<BookListPopup>();
 		services.AddTransient<AuthorListPopup>();
 		services.AddTransient<SettingsPage>();
 		services.AddTransient<AuthorPage>();
 		services.AddTransient<AuthorCreateEditPopup>();
 		services.AddTransient<EditBookPopup>();
+		services.AddTransient<DetailBookPopup>();
+		services.AddTransient<FavoriteListPopup>();
+		services.AddTransient<WishListPopup>();
+		services.AddTransient<ToReadListPopup>();
+		services.AddTransient<ReadingListPopup>();
+		services.AddTransient<FinishListPopup>();
 	}
 }

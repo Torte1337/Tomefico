@@ -7,10 +7,11 @@
              xmlns:models="clr-namespace:Tomefico.Models">
 
     <VerticalStackLayout Spacing="10" Margin="10" HorizontalOptions="Center" VerticalOptions="Center">
-        <Button BackgroundColor="#DA5B38" Text="Datenbank exportieren" Command="{Binding ExportDatabaseCommand}"/>
-        <Button BackgroundColor="#DA5B38" Text="Datenbank importieren" Command="{Binding ImportDatabaseCommand}"/>
-        <Button BackgroundColor="#DA5B38" Text="Datenbank zurücksetzen" Command="{Binding ResetDatabaseCommand}"/>
-        <Button BackgroundColor="#DA5B38" Text="Info" Command="{Binding GetInfosCommand}"/>
+        <Label Text="Einstellungen" TextColor="Black" FontAttributes="Bold" FontSize="20" HorizontalTextAlignment="Center" VerticalTextAlignment="Center"/>
+        
+        <!-- <Button BackgroundColor="#FF9C9C9C" Text="Datenbank Importieren / Exportieren" IsEnabled="False"/> -->
+        <Button BackgroundColor="#DA5B38" TextColor="Black" Text="Datenbank zurücksetzen" Command="{Binding ResetDatabaseCommand}"/>
+        <Button BackgroundColor="#DA5B38" TextColor="Black" Text="Info" Command="{Binding GetInfosCommand}"/>
     </VerticalStackLayout>
     
 </ContentPage>

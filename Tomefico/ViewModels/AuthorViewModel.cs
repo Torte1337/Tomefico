@@ -4,7 +4,9 @@ using System.Threading.Tasks;
 using CommunityToolkit.Maui.Views;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
 using Tomefico.Enums;
+using Tomefico.Message;
 using Tomefico.Models;
 using Tomefico.Service;
 using Tomefico.Views.Popup;
@@ -13,37 +15,31 @@ namespace Tomefico.ViewModels;
 
 public partial class AuthorViewModel : ObservableObject
 {
-    [ObservableProperty] private string authorFirstname = "";
-    [ObservableProperty] private string authorSurname = "";
+
     public Func<Task>? RequestClose { get; set; }
-    [ObservableProperty] private ObservableCollection<AuthorModel> authorList = new();
+    private ObservableCollection<AuthorModel> authorList = new();
+    public ObservableCollection<AuthorModel> AuthorList
+    {
+        get => authorList;
+        set => SetProperty(ref authorList, value);
+    }
     private readonly LogService logService;
     private readonly DataService dataService;
     private readonly IServiceProvider serviceProvider;
+
     public AuthorViewModel(LogService logService, DataService dataService, IServiceProvider serviceProvider)
     {
         this.logService = logService;
         this.dataService = dataService;
         this.serviceProvider = serviceProvider;
+        WeakReferenceMessenger.Default.Unregister<MessageRefreshAuthorList>(this);
+        WeakReferenceMessenger.Default.Register<MessageRefreshAuthorList>(this, OnReloadList);
         _ = OnLoadAuthorList();
     }
-    public async Task OnLoadAuthorList()
-    {
-        var authors = await dataService.OnGetAuthorList();
-        if (authors == null)
-        {
-            await Shell.Current.DisplayAlert("Fehler", "Liste der Authoren konnte nicht geladen werden, bitte versuche es erneut.", "Ok");
-            return;
-        }
-        if(AuthorList != null && AuthorList.Count > 0)
-            AuthorList.Clear();
-
-        AuthorList = new ObservableCollection<AuthorModel>(authors);
-    }
+    
     [RelayCommand]
     public async Task OnShowPopupCreateAuthor()
     {
-        OnClearFields();
         try
         {
             var popup = serviceProvider.GetRequiredService<AuthorCreateEditPopup>();
@@ -56,83 +52,56 @@ public partial class AuthorViewModel : ObservableObject
 
     }
     [RelayCommand]
-    public async Task OnShowPopupEditAuthor(AuthorModel author)
+    public async Task OnAuthorButtonPressed(AuthorModel author)
     {
-        OnClearFields();
+        var firstResult = await Shell.Current.DisplayActionSheet("Was möchtest du machen?", "Abbrechen", null, "Bearbeiten", "Löschen");
+        if (!string.IsNullOrWhiteSpace(firstResult))
+        {
+            if (firstResult.Contains("Abbrechen"))
+                return;
+            else if (firstResult.Contains("Bearbeiten"))
+            {
+                await OnShowPopupEditAuthor(author);
+            }
+            else if (firstResult.Contains("Löschen"))
+            {
+                await OnDeleteAuthor(author);
+            }
+        }
+    }
+
+    
+    private async Task OnShowPopupEditAuthor(AuthorModel author)
+    {
         if (author == null)
         {
-            await Shell.Current.DisplayAlert("Fehler", "Daten des Authors sind Fehlerhaft und können nicht geladen werden.", "Ok");
+            await Shell.Current.DisplayAlert("Fehler", "Daten des Autors sind Fehlerhaft und können nicht geladen werden.", "Ok");
             return;
         }
-        AuthorFirstname = author.Firstname;
-        AuthorSurname = author.Surname;
         var popup = serviceProvider.GetRequiredService<AuthorCreateEditPopup>();
+        WeakReferenceMessenger.Default.Send(new MessageEditAuthor(author));
         await Shell.Current.CurrentPage.ShowPopupAsync(popup);
     }
-    [RelayCommand]
-    public async Task OnSaveAuthor()
-    {
-        try
-        {
-            if (string.IsNullOrWhiteSpace(AuthorFirstname))
-            {
-                await Shell.Current.DisplayAlert("Fehler", "Bitte gebe einen Vornamen ein.", "Ok");
-                return;
-            }
-            if (string.IsNullOrWhiteSpace(AuthorSurname))
-            {
-                await Shell.Current.DisplayAlert("Fehler", "Bitte gebe einen Nachnamen ein.", "Ok");
-                return;
-            }
-
-            var newAuthor = new AuthorModel
-            {
-                Id = Guid.NewGuid(),
-                Firstname = AuthorFirstname,
-                Surname = AuthorSurname,
-                Name = AuthorFirstname + " " + AuthorSurname
-            };
-
-            await dataService.OnAddAuthor(newAuthor);
-            await Shell.Current.DisplayAlert("Erfolg", "Author wurde erfolgreich hinzugefügt.", "Ok");
-        }
-        catch (Exception ex)
-        {
-            await logService.OnLog("Fehler beim Speichern des Authors", ex.Message, DateTime.Now, LogStatus.Error);
-            return;
-        }
-        finally
-        {
-            if (RequestClose is not null)
-            {
-                await RequestClose.Invoke();
-                RequestClose = null;
-            }
-            OnClearFields();
-            await OnLoadAuthorList();
-        }
-    }
-    [RelayCommand]
-    public async Task OnDeleteAuthor(AuthorModel author)
+    private async Task OnDeleteAuthor(AuthorModel author)
     {
         try
         {
             if (author == null)
             {
-                await Shell.Current.DisplayAlert("Fehler", "Authordaten fehlerhaft.", "Ok");
+                await Shell.Current.DisplayAlert("Fehler", "Autordaten fehlerhaft.", "Ok");
                 return;
             }
-            var result = await Shell.Current.DisplayActionSheet("Author löschen?", "Abbrechen", null, "Löschen");
+            var result = await Shell.Current.DisplayActionSheet("Autor löschen?", "Abbrechen", null, "Löschen");
 
             if (result == "Abbrechen")
                 return;
 
             await dataService.OnDeleteAuthor(author.Id);
-            await Shell.Current.DisplayAlert("Erfolg", "Author wurde erfolgreich gelöscht.", "Ok");
+            await Shell.Current.DisplayAlert("Erfolg", "Autor wurde erfolgreich gelöscht.", "Ok");
         }
         catch (Exception ex)
         {
-            await logService.OnLog("Fehler beim Löschen des Authors", ex.Message, DateTime.Now, LogStatus.Error);
+            await logService.OnLog("Fehler beim Löschen des Autors", ex.Message, DateTime.Now, LogStatus.Error);
             return;
         }
         finally
@@ -145,26 +114,23 @@ public partial class AuthorViewModel : ObservableObject
             await OnLoadAuthorList();
         }
     }
-    [RelayCommand]
-    public async Task OnCancel()
+    public async void OnReloadList(object recipient, MessageRefreshAuthorList msg)
     {
-        if (RequestClose is not null)
+        await OnLoadAuthorList();
+    }
+    public async Task OnLoadAuthorList()
+    {
+        var authors = await dataService.OnGetAuthorList();
+        if (authors == null)
         {
-            await RequestClose.Invoke();
-            RequestClose = null;
+            await Shell.Current.DisplayAlert("Fehler", "Liste der Authoren konnte nicht geladen werden, bitte versuche es erneut.", "Ok");
+            return;
         }
+        if (AuthorList != null && AuthorList.Count > 0)
+            AuthorList.Clear();
+            
+        AuthorList = new ObservableCollection<AuthorModel>(authors);
     }
-    [RelayCommand]
-    public async Task OnShowSwipeHelp()
-    {
-        await Shell.Current.DisplayAlert("Hinweis zur Bedienung",
-        "Du kannst einen Author nach links oder rechts wischen: \n\n" +
-        "- Nach links: Bearbeiten\n" +
-        "- Nach rechts: Löschen \n\n", "Ok");
-    }
-    private void OnClearFields()
-    {
-        AuthorFirstname = "";
-        AuthorSurname = "";
-    }
+
+
 }
