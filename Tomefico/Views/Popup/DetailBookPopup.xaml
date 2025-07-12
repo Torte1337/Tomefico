@@ -6,11 +6,13 @@
     xmlns:vm="clr-namespace:Tomefico.ViewModels"
     xmlns:converter="clr-namespace:Tomefico.Converter"
     CanBeDismissedByTappingOutsideOfPopup="True"
+    xmlns:models="clr-namespace:Tomefico.Models"
     Color="Transparent">
 
     <toolkit:Popup.Resources>
         <ResourceDictionary>
             <converter:ByteArrayToImageSourceConverter x:Key="ByteArrayToImageSourceConverter"/>
+            <converter:BookStatusToGermanConverter x:Key="BookStatusToGermanConverter"/>
         </ResourceDictionary>
     </toolkit:Popup.Resources>
 
@@ -38,31 +40,51 @@
                 <ScrollView Grid.Row="1">
                     <VerticalStackLayout Padding="15" Spacing="5">
 
-                        <!-- Bild -->
-                        <Border StrokeShape="RoundRectangle 15" Stroke="Transparent">
-                            <Image Source="{Binding SelectedBook.CoverImage, Converter={StaticResource ByteArrayToImageSourceConverter}}"
-                                   Aspect="AspectFit"
-                                   BackgroundColor="#EEE"
-                                   HeightRequest="320"
-                                   HorizontalOptions="Center"/>
+
+                        <Border StrokeShape="RoundRectangle 15" Stroke="Transparent"
+                            BackgroundColor="#EEE"
+                            WidthRequest="260"
+                            HeightRequest="320">
+
+                            <Grid>
+                                <Image Source="{Binding SelectedBook.CoverImage, Converter={StaticResource ByteArrayToImageSourceConverter}}"
+                                    Aspect="AspectFit"
+                                    BackgroundColor="#EEE"
+                                    HorizontalOptions="Center"
+                                    VerticalOptions="Center"
+                                    Margin="5"/>
+
+                                <Label Text="❤"
+                                    FontSize="20"
+                                    TextColor="Red"
+                                    VerticalOptions="Start"
+                                    HorizontalOptions="End"
+                                    IsVisible="{Binding SelectedBook.IsFavorite}"
+                                    Margin="0,5,5,0"
+                                    Padding="2,0"
+                                    CharacterSpacing="1"/>
+                            </Grid>
+
                         </Border>
 
-                        <!-- Favoriten-Herz -->
-                        <Label Text="❤"
-                               FontSize="20"
-                               HorizontalOptions="End"
-                               IsVisible="{Binding SelectedBook.IsFavorite}"
-                               Margin="0,-10,0,0"/>
 
-                        <!-- Titel -->
-                        <Label Text="{Binding SelectedBook.Title}"
-                               FontSize="20"
-                               FontAttributes="Bold"
-                               TextColor="#333"/>
+                        <VerticalStackLayout x:DataType="models:BookModel">
+                                <!-- Titel -->
+                                <Label Text="{Binding SelectedBook.Title}"
+                                    FontSize="16"
+                                    FontAttributes="Bold"
+                                    TextColor="#333"
+                                    LineBreakMode="WordWrap"/>
+                                <!-- Status -->
+                                <Label Text="{Binding SelectedBook.Status,Converter={StaticResource BookStatusToGermanConverter}}"
+                                    FontSize="14"
+                                    FontAttributes="Italic"
+                                    TextColor="#888"/>
+                            </VerticalStackLayout>
 
                         <!-- Beschreibung -->
                         <Label Text="{Binding SelectedBook.Description}"
-                               FontSize="14"
+                               FontSize="12"
                                TextColor="#666"
                                LineBreakMode="WordWrap"/>
 
