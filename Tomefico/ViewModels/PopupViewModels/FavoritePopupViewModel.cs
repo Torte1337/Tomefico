@@ -10,18 +10,19 @@ namespace Tomefico.ViewModels.PopupViewModels;
 public partial class FavoritePopupViewModel : PopupViewModelBase
 {
     [ObservableProperty] private ObservableCollection<BookModel> favoriteList = new();
+    
     public Func<Task>? RequestClose { get; set; }
 
     public FavoritePopupViewModel(DataService dataService) : base(dataService)
     {
         _ = OnLoadList();
     }
-
     private async Task OnLoadList()
     {
         FavoriteList = new(await dataService.OnLoadFavorites());
+        
+        //var authors = new ObservableCollection<AuthorModel>(await dataService.OnGetAuthorList());
     }
-
     [RelayCommand]
     public async Task OnCancel()
     {

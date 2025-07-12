@@ -11,7 +11,7 @@
 
     <Grid VerticalOptions="Center" HorizontalOptions="Center" Padding="0">
         <Border
-            StrokeThickness="1"
+            StrokeThickness="0"
             StrokeShape="RoundRectangle 20"
             Stroke="Gray"
             BackgroundColor="white"

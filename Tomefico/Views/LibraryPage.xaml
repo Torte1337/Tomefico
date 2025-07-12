@@ -5,14 +5,7 @@
              BackgroundColor="#FDE0CD"
              xmlns:pm="Tomefico.ViewModels"
              x:Name="LibraryPageView"
-             xmlns:converters="clr-namespace:Tomefico.Converter"
              xmlns:models="clr-namespace:Tomefico.Models">
-
-    <ContentPage.Resources>
-        <ResourceDictionary>
-            <converters:SelectedToEnabledConverter x:Key="SelectedToEnabledConverter" />
-        </ResourceDictionary>
-    </ContentPage.Resources>
 
     <VerticalStackLayout Padding="10" Margin="10">
         <HorizontalStackLayout HorizontalOptions="Center" Margin="0,20,0,0">
@@ -24,10 +17,9 @@
             <!-- A-Z Buchstabenliste -->
             <ScrollView Grid.Column="0" VerticalScrollBarVisibility="Always">
                 <VerticalStackLayout Spacing="5">
-                    <ListView ItemsSource="{Binding AuthorInitials}">
-                        <ListView.ItemTemplate>
+                    <CollectionView ItemsSource="{Binding AuthorInitials}">
+                        <CollectionView.ItemTemplate>
                             <DataTemplate>
-                                <ViewCell>
                                     <Button Text="{Binding Letter}"
                                         Command="{Binding BindingContext.SelectInitialCommand, Source={x:Reference LibraryPageView}}"
                                         CommandParameter="{Binding Letter}"
@@ -35,26 +27,23 @@
                                         Margin="5"
                                         HeightRequest="40"
                                         WidthRequest="40"
-                                        TextColor="Black"
                                         BackgroundColor="#FFFABA6C"
                                         CornerRadius="5"
                                         IsEnabled="{Binding IsEnabled}">
                                     </Button>
-                                </ViewCell>
                             </DataTemplate>
-                        </ListView.ItemTemplate>
-                    </ListView>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
                 </VerticalStackLayout>
             </ScrollView>
 
             <!-- Autoren & Bücher -->
-            <ListView Grid.Column="1"
+            <CollectionView Grid.Column="1"
                             HorizontalOptions="Center"
                             Margin="60,0,0,0"
                             ItemsSource="{Binding FilteredAuthors}">
-                <ListView.ItemTemplate>
+                <CollectionView.ItemTemplate>
                     <DataTemplate>
-                        <ViewCell>
                             <VerticalStackLayout Padding="5">
                                 <Label Text="{Binding Name}"
                                     FontSize="20"
@@ -62,10 +51,9 @@
                                     FontAttributes="Bold"
                                     Margin="0,5"/>
 
-                                <ListView ItemsSource="{Binding Books}">
-                                    <ListView.ItemTemplate>
+                                <CollectionView ItemsSource="{Binding Books}">
+                                    <CollectionView.ItemTemplate>
                                         <DataTemplate>
-                                            <ViewCell>
                                                 <Grid Padding="5">
                                                     <Grid.GestureRecognizers>
                                                         <TapGestureRecognizer
@@ -79,15 +67,13 @@
                                                         TextColor="Black"
                                                         VerticalOptions="Center"/>
                                                 </Grid>
-                                            </ViewCell>
                                         </DataTemplate>
-                                    </ListView.ItemTemplate>
-                                </ListView>
+                                    </CollectionView.ItemTemplate>
+                                </CollectionView>
                             </VerticalStackLayout>
-                        </ViewCell>
                     </DataTemplate>
-                </ListView.ItemTemplate>
-            </ListView>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
         </Grid>
     </VerticalStackLayout>
 </ContentPage>

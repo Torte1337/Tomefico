@@ -1,26 +1,31 @@
-<toolkit:Popup 
+<toolkit:Popup
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
     x:Class="Tomefico.Views.Popup.DetailBookPopup"
     xmlns:vm="clr-namespace:Tomefico.ViewModels"
-    x:DataType="vm:DetailBookViewModel"
+    xmlns:converter="clr-namespace:Tomefico.Converter"
     CanBeDismissedByTappingOutsideOfPopup="True"
     Color="Transparent">
 
+    <toolkit:Popup.Resources>
+        <ResourceDictionary>
+            <converter:ByteArrayToImageSourceConverter x:Key="ByteArrayToImageSourceConverter"/>
+        </ResourceDictionary>
+    </toolkit:Popup.Resources>
+
     <Grid Padding="15" VerticalOptions="Center" HorizontalOptions="Center">
         <Border
-            StrokeShape="RoundRectangle 35"
+            StrokeShape="RoundRectangle 25"
             BackgroundColor="White"
-            WidthRequest="300"
-            MaximumHeightRequest="600"
+            WidthRequest="260"
             Padding="0">
 
-            <Grid RowDefinitions="Auto,Auto,*">
+            <Grid RowDefinitions="Auto,*">
 
-                <!-- Header mit Close -->
+                <!-- Header -->
                 <Grid Row="0" Padding="15" BackgroundColor="#FAFAFA">
-                    <Label Text="Buchdetails" FontSize="18" FontAttributes="Bold" HorizontalOptions="Start" VerticalOptions="Center"/>
+                    <Label Text="Buchdetails" TextColor="Black" FontSize="18" FontAttributes="Bold" HorizontalOptions="Start"/>
                     <Button Text="✕"
                             Command="{Binding ClosePopupCommand}"
                             FontSize="16"
@@ -29,36 +34,40 @@
                             TextColor="Black"/>
                 </Grid>
 
-                <!-- Bild + Favoriten Icon -->
-                <Grid Row="1">
-                    <Border StrokeShape="RoundRectangle 15,15,0,0">
-                        <Image Aspect="AspectFill" Source="{Binding SelectedBook.CoverImage}" BackgroundColor="#EEE" HeightRequest="220"/>
-                    </Border>
-                    <!-- Favoriten-Herz -->
-                    <Label Text="❤"
-                           HeightRequest="24" 
-                           WidthRequest="24"
-                           HorizontalOptions="End"
-                           VerticalOptions="Start"
-                           IsVisible="{Binding SelectedBook.IsFavorite}"
-                           Margin="10"/>
-                </Grid>
+                <!-- Content -->
+                <ScrollView Grid.Row="1">
+                    <VerticalStackLayout Padding="15" Spacing="5">
 
-                <!-- Inhalte -->
-                <Border Grid.Row="2" TranslationY="-10" StrokeShape="RoundRectangle 15,15,0,0" BackgroundColor="#F4F4F4" Padding="20">
-                    <VerticalStackLayout Spacing="12">
+                        <!-- Bild -->
+                        <Border StrokeShape="RoundRectangle 15" Stroke="Transparent">
+                            <Image Source="{Binding SelectedBook.CoverImage, Converter={StaticResource ByteArrayToImageSourceConverter}}"
+                                   Aspect="AspectFit"
+                                   BackgroundColor="#EEE"
+                                   HeightRequest="320"
+                                   HorizontalOptions="Center"/>
+                        </Border>
 
-                        <Label Text="{Binding SelectedBook.Title}" FontSize="20" FontAttributes="Bold" TextColor="#333"/>
+                        <!-- Favoriten-Herz -->
+                        <Label Text="❤"
+                               FontSize="20"
+                               HorizontalOptions="End"
+                               IsVisible="{Binding SelectedBook.IsFavorite}"
+                               Margin="0,-10,0,0"/>
 
-                        <Label Text="{Binding SelectedBook.Description}" FontSize="14" TextColor="#666" LineBreakMode="WordWrap"/>
+                        <!-- Titel -->
+                        <Label Text="{Binding SelectedBook.Title}"
+                               FontSize="20"
+                               FontAttributes="Bold"
+                               TextColor="#333"/>
 
-                        <HorizontalStackLayout Spacing="15" HorizontalOptions="End" Margin="0,10,0,0">
-
-                        </HorizontalStackLayout>
+                        <!-- Beschreibung -->
+                        <Label Text="{Binding SelectedBook.Description}"
+                               FontSize="14"
+                               TextColor="#666"
+                               LineBreakMode="WordWrap"/>
 
                     </VerticalStackLayout>
-                </Border>
-
+                </ScrollView>
             </Grid>
         </Border>
     </Grid>

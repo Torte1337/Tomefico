@@ -5,20 +5,24 @@
     xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
     x:Class="Tomefico.Views.Popup.WishListPopup"
     CanBeDismissedByTappingOutsideOfPopup="True"
-    xmlns:vm="clr-namespace:Tomefico.ViewModels"
-    Color="Transparent"> 
+    xmlns:models="clr-namespace:Tomefico.Models"
+    Color="Transparent"
+    > 
 
 
     <Grid VerticalOptions="Center" HorizontalOptions="Center" Padding="0">
         <Border
             StrokeThickness="0"
             StrokeShape="RoundRectangle 20"
-            BackgroundColor="White"
+            Stroke="Gray"
+            BackgroundColor="white"
             Padding="20"
             WidthRequest="320"
             MaximumHeightRequest="650">
-            <VerticalStackLayout Spacing="5">
-                <HorizontalStackLayout HorizontalOptions="Center" Spacing="150">
+
+            <ScrollView>
+                <VerticalStackLayout Spacing="5">
+                    <HorizontalStackLayout HorizontalOptions="Center" Spacing="120">
                         <Label Text="Wunschliste" 
                             VerticalOptions="Center" 
                             HorizontalOptions="Start" 
@@ -34,22 +38,23 @@
                             HorizontalOptions="End" 
                             Command="{Binding CancelCommand}"/>
                     </HorizontalStackLayout>
-                <ScrollView>
-                    <ListView ItemsSource="{Binding WishList}" HorizontalOptions="Center" VerticalOptions="Center">
-                        <ListView.ItemTemplate>
-                            <DataTemplate>
-                                <ViewCell>
-                                    <Border StrokeShape="RoundRectangle 8" Margin="2" HeightRequest="50" Padding="10" BackgroundColor="#4B919191" Stroke="#66000000">
-                                        <Label Text="{Binding Title}" TextColor="Black" HorizontalTextAlignment="Start" VerticalTextAlignment="Center"/>
-                                    </Border>
-                                </ViewCell>
-                            </DataTemplate>
-                        </ListView.ItemTemplate>
-                    </ListView>
-                </ScrollView>
-            </VerticalStackLayout>
 
-            
+                    <CollectionView ItemsSource="{Binding WishList}" 
+                            HorizontalOptions="Center" 
+                            VerticalOptions="Center">
+                            <CollectionView.ItemTemplate>
+                                <DataTemplate>
+                                    <Border StrokeShape="RoundRectangle 5" Margin="5" HeightRequest="80" Padding="10" BackgroundColor="#4B919191" Stroke="#FFA0A0A0">
+                                        <VerticalStackLayout Spacing="5" x:DataType="models:BookModel" VerticalOptions="Center">
+                                            <Label Text="{Binding Title}" TextColor="Black"/>
+                                            <Label Text="{Binding Author.Name}" TextColor="Black" FontAttributes="Italic" FontSize="12"/>
+                                        </VerticalStackLayout>
+                                    </Border>
+                                </DataTemplate>
+                            </CollectionView.ItemTemplate>
+                    </CollectionView>
+                </VerticalStackLayout>
+            </ScrollView>
         </Border>
     </Grid>
 </toolkit:Popup>

@@ -235,7 +235,7 @@ public class DataService
                 existingBook.CoverImage = updatedBook.CoverImage;
                 hasChanges = true;
             }
-            if (updatedBook.Status.HasValue && updatedBook.Status.Value != existingBook.Status)
+            if (updatedBook.Status.HasValue && updatedBook.Status.Value != (BookStatus)existingBook.Status)
             {
                 existingBook.Status = updatedBook.Status.Value;
                 hasChanges = true;
@@ -444,7 +444,7 @@ public class DataService
     {
         try
         {
-            var result = await context.Books.Where(x => x.IsFavorite == true).ToListAsync();
+            var result = await context.Books.Where(x => x.IsFavorite == true).Include(b => b.Author).ToListAsync();
             return result;
         }
         catch (Exception ex)

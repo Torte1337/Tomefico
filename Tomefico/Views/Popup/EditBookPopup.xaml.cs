@@ -1,4 +1,4 @@
-using Tomefico.ViewModels;
+using Tomefico.ViewModels.PopupViewModels;
 
 namespace Tomefico.Views.Popup;
 
@@ -10,7 +10,7 @@ public partial class EditBookPopup : CommunityToolkit.Maui.Views.Popup
 		BindingContext = vm;
 
 
-		vm.OnRegisterMessage();
+		// vm.OnRegisterMessage();
 		vm.RequestClose = async () => { await this.CloseAsync(); };
 	}
 }

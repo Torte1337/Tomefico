@@ -16,7 +16,7 @@
         <!-- Bücher Buttons -->
         <HorizontalStackLayout Grid.Row="1" HorizontalOptions="Center" Spacing="15">
             <Border StrokeShape="RoundRectangle 15"
-                    Stroke="#FFFFFF66" BackgroundColor="#FFFFFF99"
+                    Stroke="#FFCDF2FD" BackgroundColor="#FFCDF2FD"
                     WidthRequest="150" HeightRequest="150">
                     <VerticalStackLayout HorizontalOptions="Center" VerticalOptions="Center">
                         <Label Text="📚" FontSize="30" HorizontalTextAlignment="Center"/>
@@ -27,7 +27,7 @@
                     </Border.GestureRecognizers>
             </Border>
             <Border StrokeShape="RoundRectangle 15"
-                    Stroke="#FFFFFF66" BackgroundColor="#FFFFFF99"
+                    Stroke="#FFCDF2FD" BackgroundColor="#FFCDF2FD"
                     WidthRequest="150" HeightRequest="150">
                     <VerticalStackLayout HorizontalOptions="Center" VerticalOptions="Center">
                         <Label Text="📙" FontSize="30" HorizontalTextAlignment="Center"/>
@@ -40,7 +40,7 @@
         </HorizontalStackLayout>
         <HorizontalStackLayout Grid.Row="2" HorizontalOptions="Center" Spacing="15">
             <Border StrokeShape="RoundRectangle 15"
-                    Stroke="#FFFFFF66" BackgroundColor="#FFFFFF99"
+                    Stroke="#FFCDF2FD" BackgroundColor="#FFCDF2FD"
                     WidthRequest="150" HeightRequest="150">
                     <VerticalStackLayout HorizontalOptions="Center" VerticalOptions="Center">
                         <Label Text="📕" FontSize="30" HorizontalTextAlignment="Center"/>
@@ -51,7 +51,7 @@
                     </Border.GestureRecognizers>
             </Border>
             <Border StrokeShape="RoundRectangle 15"
-                    Stroke="#FFFFFF66" BackgroundColor="#FFFFFF99"
+                    Stroke="#FFCDF2FD" BackgroundColor="#FFCDF2FD"
                     WidthRequest="150" HeightRequest="150">
                     <VerticalStackLayout HorizontalOptions="Center" VerticalOptions="Center">
                         <Label Text="📗" FontSize="30" HorizontalTextAlignment="Center"/>
@@ -64,7 +64,7 @@
         </HorizontalStackLayout>
         <HorizontalStackLayout Grid.Row="3" HorizontalOptions="Center" Spacing="15">
             <Border StrokeShape="RoundRectangle 15"
-                    Stroke="#FFFFFF66" BackgroundColor="#FFFFFF99"
+                    Stroke="#FFCDF2FD" BackgroundColor="#FFCDF2FD"
                     WidthRequest="150" HeightRequest="150">
                     <VerticalStackLayout HorizontalOptions="Center" VerticalOptions="Center">
                         <Label Text="❤️" FontSize="30" HorizontalTextAlignment="Center"/>
@@ -75,7 +75,7 @@
                     </Border.GestureRecognizers>
             </Border>
             <Border StrokeShape="RoundRectangle 15"
-                    Stroke="#FFFFFF66" BackgroundColor="#FFFFFF99"
+                    Stroke="#FFCDF2FD" BackgroundColor="#FFCDF2FD"
                     WidthRequest="150" HeightRequest="150">
                     <VerticalStackLayout HorizontalOptions="Center" VerticalOptions="Center">
                         <Label Text="✒️" FontSize="30" HorizontalTextAlignment="Center"/>

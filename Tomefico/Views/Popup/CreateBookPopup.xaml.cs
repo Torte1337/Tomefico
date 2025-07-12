@@ -1,11 +1,10 @@
 using Tomefico.ViewModels.PopupViewModels;
-using Microsoft.Maui.ApplicationModel;
 
 namespace Tomefico.Views.Popup;
 
-public partial class FavoriteListPopup : CommunityToolkit.Maui.Views.Popup
+public partial class CreateBookPopup : CommunityToolkit.Maui.Views.Popup
 {
-	public FavoriteListPopup(FavoritePopupViewModel vm)
+	public CreateBookPopup(CreateBookViewModel vm)
 	{
 		InitializeComponent();
 		BindingContext = vm;

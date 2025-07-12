@@ -7,6 +7,7 @@ using Tomefico.ViewModels;
 using Tomefico.Views;
 using Tomefico.Views.Popup;
 using Tomefico.ViewModels.PopupViewModels;
+using Tomefico.Converter;
 
 namespace Tomefico;
 
@@ -41,16 +42,17 @@ public static class MauiProgram
 
 		services.AddSingleton<LogService>();
 		services.AddSingleton<DataService>();
+		services.AddSingleton<ByteArrayToImageSourceConverter>();
 	}
 	private static void AddViewModels(this IServiceCollection services)
 	{
 		services.AddTransient<DashboardViewModel>();
 		services.AddTransient<LibraryViewModel>();
+		services.AddTransient<AuthorViewModel>();
+		services.AddTransient<EditBookViewModel>();
 		services.AddTransient<CreateBookViewModel>();
 		services.AddTransient<DetailBookViewModel>();
 		services.AddTransient<SettingsViewModel>();
-		services.AddTransient<AuthorViewModel>();
-		services.AddTransient<EditBookViewModel>();
 		services.AddTransient<DetailBookViewModel>();
 		services.AddTransient<CreateEditAuthorViewModel>();
 		services.AddTransient<AuthorListPopupViewModel>();
@@ -64,13 +66,13 @@ public static class MauiProgram
 	{
 		services.AddTransient<DashboardPage>();
 		services.AddTransient<LibraryPage>();
-		services.AddTransient<CreateEditBookPopup>();
+		services.AddTransient<CreateBookPopup>();
+		services.AddTransient<DetailBookPopup>();
 		services.AddTransient<AuthorListPopup>();
 		services.AddTransient<SettingsPage>();
 		services.AddTransient<AuthorPage>();
 		services.AddTransient<AuthorCreateEditPopup>();
 		services.AddTransient<EditBookPopup>();
-		services.AddTransient<DetailBookPopup>();
 		services.AddTransient<FavoriteListPopup>();
 		services.AddTransient<WishListPopup>();
 		services.AddTransient<ToReadListPopup>();

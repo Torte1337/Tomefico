@@ -27,6 +27,7 @@ public partial class LibraryViewModel : ObservableObject
 
     public LibraryViewModel(DataService dataService, IServiceProvider serviceProvider)
     {
+        IsFirstLoad = true;
         this.dataService = dataService;
         this.serviceProvider = serviceProvider;
         _ = OnLoadLists();
@@ -56,12 +57,10 @@ public partial class LibraryViewModel : ObservableObject
 
             AuthorInitials = new ObservableCollection<LetterItem>(letterItems);
 
-            await Task.Delay(50);
-
             if (IsFirstLoad && letterItems.Count > 0)
             {
-                await OnSelectInitial(letterItems[0].Letter);
                 IsFirstLoad = false;
+                await OnSelectInitial(letterItems[0].Letter);
             }
             else if (!string.IsNullOrWhiteSpace(SelectedInitial))
                 await OnSelectInitial(SelectedInitial);
@@ -95,8 +94,8 @@ public partial class LibraryViewModel : ObservableObject
     [RelayCommand]
     public async Task GoToCreateBook()
     {
-        var popup = serviceProvider.GetRequiredService<CreateEditBookPopup>();
-        await Shell.Current.CurrentPage.ShowPopupAsync(popup);
+        var createBookPopup = serviceProvider.GetRequiredService<CreateBookPopup>();
+        await Shell.Current.CurrentPage.ShowPopupAsync(createBookPopup);
     }
     public async Task GoToEditBook(BookModel book)
     {
